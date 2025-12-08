@@ -7,10 +7,13 @@ import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.common.util.PasswordEncoder;
 import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
 import com.example.outsourcing.domain.user.model.response.UserCreateResponse;
+import com.example.outsourcing.domain.user.model.response.UserGetListResponse;
 import com.example.outsourcing.domain.user.model.response.UserGetOneResponse;
 import com.example.outsourcing.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -51,9 +54,17 @@ public class UserService {
         return new CommonResponse<>(true, "사용자 정보 조회 성공", response);
     }
 
+    //사용자 목록 조회
+    public CommonResponse<List<UserGetListResponse>> getList() {
 
-    //TODO 사용자 목록 조회 : getList()
-    //TODO Return data : List<UserGetListResponse> (id, username, email, name, role, createdAt)
+        List<User> userList = userRepository.findAll();
+
+        List<UserGetListResponse> userGetListResponseList = userList.stream()
+                .map(UserGetListResponse::from)
+                .toList();
+
+        return new CommonResponse<>(true, "사용자 목록 조회 성공", userGetListResponseList);
+    }
 
 
     //TODO 사용자 정보 수정 : update()

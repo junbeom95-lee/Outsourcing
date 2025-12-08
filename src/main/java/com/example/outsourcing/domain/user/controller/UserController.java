@@ -3,6 +3,7 @@ package com.example.outsourcing.domain.user.controller;
 import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
 import com.example.outsourcing.domain.user.model.response.UserCreateResponse;
+import com.example.outsourcing.domain.user.model.response.UserGetListResponse;
 import com.example.outsourcing.domain.user.model.response.UserGetOneResponse;
 import com.example.outsourcing.domain.user.service.UserService;
 import jakarta.validation.Valid;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,9 +42,14 @@ public class UserController {
     }
 
 
-    //TODO 사용자 목록 조회 : getList()
-    //TODO URI : /api/users, method : GET
-    //TODO data : List<UserGetListResponse> (id, username, email, name, role, createdAt)
+    //사용자 목록 조회
+    @GetMapping()
+    public ResponseEntity<CommonResponse<List<UserGetListResponse>>> getList() {
+
+        CommonResponse<List<UserGetListResponse>> response = userService.getList();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
 
     //TODO 사용자 정보 수정 : update()
