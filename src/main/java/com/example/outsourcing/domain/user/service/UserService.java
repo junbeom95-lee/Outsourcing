@@ -2,6 +2,7 @@ package com.example.outsourcing.domain.user.service;
 
 import com.example.outsourcing.common.entity.User;
 import com.example.outsourcing.common.enums.ExceptionCode;
+import com.example.outsourcing.common.enums.UserRole;
 import com.example.outsourcing.common.exception.CustomException;
 import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.common.util.PasswordEncoder;
@@ -40,7 +41,7 @@ public class UserService {
 
         if (exitsUsername) throw new CustomException(ExceptionCode.EXISTS_USERNAME);
 
-        User user = new User(request.getUsername(), request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getName());
+        User user = new User(request.getUsername(), request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getName(), UserRole.USER);
 
         User savedUser = userRepository.save(user);
 

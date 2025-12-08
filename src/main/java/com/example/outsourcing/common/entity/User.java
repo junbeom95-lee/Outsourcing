@@ -41,11 +41,12 @@ public class User extends BaseEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;//삭제일
 
-    public User(String username, String email, String password, String name) {
+    public User(String username, String email, String password, String name, UserRole role) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.name = name;
+        this.role = role;
     }
 
     public void update(UserUpdateRequest request) {
