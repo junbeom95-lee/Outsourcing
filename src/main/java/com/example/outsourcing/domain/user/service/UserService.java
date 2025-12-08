@@ -1,5 +1,12 @@
 package com.example.outsourcing.domain.user.service;
 
+import com.example.outsourcing.common.entity.User;
+import com.example.outsourcing.common.enums.ExceptionCode;
+import com.example.outsourcing.common.exception.CustomException;
+import com.example.outsourcing.common.model.CommonResponse;
+import com.example.outsourcing.common.util.PasswordEncoder;
+import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
+import com.example.outsourcing.domain.user.model.response.UserCreateResponse;
 import com.example.outsourcing.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,10 +16,28 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    //TODO 회원가입 : create()
-    //TODO Param : UserCreateRequest (username, email, password, name)
-    //TODO Return data : UserCreateResponse (id, username, email, name, role, createdAt)
+
+    //회원가입
+    public CommonResponse<UserCreateResponse> create(UserCreateRequest request) {
+
+        boolean exitsEmail = userRepository.existsByEmail(request.getEmail());
+
+        if (exitsEmail) throw new CustomException(ExceptionCode.EXISTS_EMAIL);
+
+        boolean exitsUsername = userRepository.existsByUsername(request.getUsername());
+
+        if (exitsUsername) throw new CustomException(ExceptionCode.EXISTS_USERNAME);
+
+        User user = new User(request.getUsername(), request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getName());
+
+        User savedUser = userRepository.save(user);
+
+        UserCreateResponse response = UserCreateResponse.from(savedUser);
+
+        return new CommonResponse<>(true, "회원가입이 완료되었습니다.", response);
+    }
 
 
     //TODO 사용자 정보 조회 : getOne()

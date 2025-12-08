@@ -1,7 +1,15 @@
 package com.example.outsourcing.domain.user.controller;
 
+import com.example.outsourcing.common.model.CommonResponse;
+import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
+import com.example.outsourcing.domain.user.model.response.UserCreateResponse;
 import com.example.outsourcing.domain.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,10 +21,14 @@ public class UserController {
     private final UserService userService;
 
 
-    //TODO 회원가입 : create()
-    //TODO URI : /api/users, method : POST
-    //TODO RequestBody : UserCreateRequest (username, email, password, name)
-    //TODO data : UserCreateResponse (id, username, email, name, role, createdAt)
+    //회원가입
+    @PostMapping()
+    public ResponseEntity<CommonResponse<UserCreateResponse>> create(@RequestBody @Valid UserCreateRequest request) {
+
+        CommonResponse<UserCreateResponse> response = userService.create(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
 
     //TODO 사용자 정보 조회 : getOne()
