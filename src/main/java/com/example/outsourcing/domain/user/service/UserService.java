@@ -6,10 +6,13 @@ import com.example.outsourcing.common.exception.CustomException;
 import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.common.util.PasswordEncoder;
 import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
+import com.example.outsourcing.domain.user.model.request.UserUpdateRequest;
 import com.example.outsourcing.domain.user.model.response.UserCreateResponse;
 import com.example.outsourcing.domain.user.model.response.UserGetListResponse;
 import com.example.outsourcing.domain.user.model.response.UserGetOneResponse;
+import com.example.outsourcing.domain.user.model.response.UserUpdateResponse;
 import com.example.outsourcing.domain.user.repository.UserRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -66,14 +69,34 @@ public class UserService {
         return new CommonResponse<>(true, "사용자 목록 조회 성공", userGetListResponseList);
     }
 
+    //사용자 정보 수정
+    public CommonResponse<UserUpdateResponse> update(Long id, @Valid UserUpdateRequest request) {
 
-    //TODO 사용자 정보 수정 : update()
-    //TODO Param : Long id (유저 id), UserUpdateRequest (name, email, password)
-    //TODO Return data : UserUpdateResponse (id, username, email, name, role, createdAt, updatedAt)
+        boolean exitsEmail = userRepository.existsByEmail(request.getEmail());
+
+        if (exitsEmail) throw new CustomException(ExceptionCode.EXISTS_EMAIL);
+
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new CustomException(ExceptionCode.NOT_FOUND_USER));
+
+        boolean matches = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+        if (matches) {
+
+            user.update(request);
+
+            UserUpdateResponse response = UserUpdateResponse.from(user);
+
+            return new CommonResponse<>(true, "사용자 정보가 수정되었습니다.", response);
+        }
+
+        throw new CustomException(ExceptionCode.NOT_MATCHES_PASSWORD);
+    }
 
 
     //TODO 회원 탈퇴 delete()
     //TODO URI : /api/users/{id}, method: DELETE
     //TODO Param : Long id (유저 id), UserDeleteRequest (password)
     //TODO Return data : null
+
 }

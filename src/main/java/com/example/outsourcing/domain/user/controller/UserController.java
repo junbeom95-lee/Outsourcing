@@ -2,9 +2,11 @@ package com.example.outsourcing.domain.user.controller;
 
 import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
+import com.example.outsourcing.domain.user.model.request.UserUpdateRequest;
 import com.example.outsourcing.domain.user.model.response.UserCreateResponse;
 import com.example.outsourcing.domain.user.model.response.UserGetListResponse;
 import com.example.outsourcing.domain.user.model.response.UserGetOneResponse;
+import com.example.outsourcing.domain.user.model.response.UserUpdateResponse;
 import com.example.outsourcing.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -52,9 +54,16 @@ public class UserController {
     }
 
 
-    //TODO 사용자 정보 수정 : update()
-    //TODO Param : Long id (유저 id), UserUpdateRequest (name, email, password)
-    //TODO data : UserUpdateResponse (id, username, email, name, role, createdAt, updatedAt)
+    //사용자 정보 수정
+    @PutMapping("/{id}")
+    public ResponseEntity<CommonResponse<UserUpdateResponse>> update(@PathVariable Long id,
+                                                                     @RequestBody @Valid UserUpdateRequest request) {
+
+        CommonResponse<UserUpdateResponse> response = userService.update(id, request);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 
     //TODO 회원 탈퇴 : delete()
     //TODO Param : UserDeleteRequest (password)

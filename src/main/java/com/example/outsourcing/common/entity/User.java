@@ -1,6 +1,7 @@
 package com.example.outsourcing.common.entity;
 
 import com.example.outsourcing.common.enums.UserRole;
+import com.example.outsourcing.domain.user.model.request.UserUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -45,6 +46,11 @@ public class User extends BaseEntity {
         this.email = email;
         this.password = password;
         this.name = name;
+    }
+
+    public void update(UserUpdateRequest request) {
+        this.name = request.getName() == null ? this.name : request.getName() ;
+        this.email = request.getEmail() == null ? this.email : request.getEmail();
     }
 
     public void softDelete() {
