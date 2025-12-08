@@ -7,6 +7,7 @@ import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.common.util.PasswordEncoder;
 import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
 import com.example.outsourcing.domain.user.model.response.UserCreateResponse;
+import com.example.outsourcing.domain.user.model.response.UserGetOneResponse;
 import com.example.outsourcing.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,10 +40,16 @@ public class UserService {
         return new CommonResponse<>(true, "회원가입이 완료되었습니다.", response);
     }
 
+    //사용자 정보 조회 (단건)
+    public CommonResponse<UserGetOneResponse> getOne(Long id) {
 
-    //TODO 사용자 정보 조회 : getOne()
-    //TODO Param : Long id (유저 id)
-    //TODO Return data : UserGetOneResponse (id, username, email, name, role, createdAt, updatedAt)
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new CustomException(ExceptionCode.NOT_FOUND_USER));
+
+        UserGetOneResponse response = UserGetOneResponse.from(user);
+
+        return new CommonResponse<>(true, "사용자 정보 조회 성공", response);
+    }
 
 
     //TODO 사용자 목록 조회 : getList()

@@ -3,15 +3,13 @@ package com.example.outsourcing.domain.user.controller;
 import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
 import com.example.outsourcing.domain.user.model.response.UserCreateResponse;
+import com.example.outsourcing.domain.user.model.response.UserGetOneResponse;
 import com.example.outsourcing.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,10 +29,14 @@ public class UserController {
     }
 
 
-    //TODO 사용자 정보 조회 : getOne()
-    //TODO URI : /api/users/{id}, method : GET
-    //TODO PathVariable : id (유저 id)
-    //TODO data : UserGetOneResponse (id, username, email, name, role, createdAt, updatedAt)
+    //사용자 정보 조회 (단건)
+    @GetMapping("/{id}")
+    public ResponseEntity<CommonResponse<UserGetOneResponse>> getOne(@PathVariable Long id) {
+
+        CommonResponse<UserGetOneResponse> response = userService.getOne(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
 
     //TODO 사용자 목록 조회 : getList()
