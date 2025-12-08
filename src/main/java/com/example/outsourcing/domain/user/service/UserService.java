@@ -16,6 +16,7 @@ import com.example.outsourcing.domain.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class UserService {
 
 
     //회원가입
+    @Transactional
     public CommonResponse<UserCreateResponse> create(UserCreateRequest request) {
 
         boolean exitsEmail = userRepository.existsByEmail(request.getEmail());
@@ -48,6 +50,7 @@ public class UserService {
     }
 
     //사용자 정보 조회 (단건)
+    @Transactional(readOnly = true)
     public CommonResponse<UserGetOneResponse> getOne(Long id) {
 
         User user = userRepository.findById(id).orElseThrow(
@@ -59,6 +62,7 @@ public class UserService {
     }
 
     //사용자 목록 조회
+    @Transactional(readOnly = true)
     public CommonResponse<List<UserGetListResponse>> getList() {
 
         List<User> userList = userRepository.findAll();
@@ -71,6 +75,7 @@ public class UserService {
     }
 
     //사용자 정보 수정
+    @Transactional
     public CommonResponse<UserUpdateResponse> update(Long id, @Valid UserUpdateRequest request) {
 
         boolean exitsEmail = userRepository.existsByEmail(request.getEmail());
@@ -95,6 +100,7 @@ public class UserService {
     }
 
     //회원 탈퇴
+    @Transactional
     public CommonResponse<Void> delete(Long id, UserDeleteRequest request) {
 
         User user = userRepository.findById(id).orElseThrow(
