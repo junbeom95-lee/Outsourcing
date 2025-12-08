@@ -4,6 +4,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -24,10 +27,21 @@ public class JwtUtil {
     private SecretKey key;
     private JwtParser parser;
 
+    // @PostConstruct 어플리케이션 실행 될 때 가장 먼저 실행 되게 하는 어노테이션
+    // JWT 서명 검증을 위한 Key 준비 + parser 준비 (빈 초기화 메서드)
+    @PostConstruct
+    public void init() {
+        byte[] bytes = Decoders.BASE64.decode(secretKeyString);      //  secret key → byte[]로 변환
+        this.key = Keys.hmacShaKeyFor(bytes);                        // JWT 서명을 검증할 Key 객체 생성
+        this.parser = Jwts.parser()                                  // 나중에 JWT 토큰을 파싱·검증할 parser 생성
+                .verifyWith(this.key)
+                .build();
+    }
+
     // 토큰 생성
     public String generateToken(String email) {
         Date now = new Date();
-        return  Jwts.builder()
+        return Jwts.builder()
                 .claim("email", email)
                 .issuedAt(now)                                       // 발급 시간
                 .expiration(new Date(now.getTime() + TOKEN_TIME))    // 토큰 유효시간
@@ -50,9 +64,13 @@ public class JwtUtil {
     }
 
     // 토큰 복호화
-    private Claims extractAllClaims(String token){return parser.parseSignedClaims(token).getPayload();}
+    private Claims extractAllClaims(String token) {
+        return parser.parseSignedClaims(token).getPayload();
+    }
 
-    public String extractEmailClaims(String token){return extractAllClaims(token).get("email", String.class);}
+    public String extractEmailClaims(String token) {
+        return extractAllClaims(token).get("email", String.class);
+    }
 
 
 }
