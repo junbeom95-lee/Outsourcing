@@ -49,5 +49,10 @@ public class JwtUtil {
         }
     }
 
+    // 토큰 복호화
+    private Claims extractAllClaims(String token){return parser.parseSignedClaims(token).getPayload();}
+
+    public String extractEmailClaims(String token){return extractAllClaims(token).get("email", String.class);}
+
 
 }
