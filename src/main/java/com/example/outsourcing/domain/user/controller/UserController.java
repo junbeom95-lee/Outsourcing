@@ -2,6 +2,7 @@ package com.example.outsourcing.domain.user.controller;
 
 import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
+import com.example.outsourcing.domain.user.model.request.UserDeleteRequest;
 import com.example.outsourcing.domain.user.model.request.UserUpdateRequest;
 import com.example.outsourcing.domain.user.model.response.UserCreateResponse;
 import com.example.outsourcing.domain.user.model.response.UserGetListResponse;
@@ -64,9 +65,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    //회원 탈퇴
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommonResponse<Void>> delete(@PathVariable Long id, @RequestBody @Valid UserDeleteRequest request) {
 
-    //TODO 회원 탈퇴 : delete()
-    //TODO Param : UserDeleteRequest (password)
-    //TODO data : null
+        CommonResponse<Void> response = userService.delete(id, request);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
 }

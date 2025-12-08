@@ -6,6 +6,7 @@ import com.example.outsourcing.common.exception.CustomException;
 import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.common.util.PasswordEncoder;
 import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
+import com.example.outsourcing.domain.user.model.request.UserDeleteRequest;
 import com.example.outsourcing.domain.user.model.request.UserUpdateRequest;
 import com.example.outsourcing.domain.user.model.response.UserCreateResponse;
 import com.example.outsourcing.domain.user.model.response.UserGetListResponse;
@@ -93,10 +94,22 @@ public class UserService {
         throw new CustomException(ExceptionCode.NOT_MATCHES_PASSWORD);
     }
 
+    //회원 탈퇴
+    public CommonResponse<Void> delete(Long id, UserDeleteRequest request) {
 
-    //TODO 회원 탈퇴 delete()
-    //TODO URI : /api/users/{id}, method: DELETE
-    //TODO Param : Long id (유저 id), UserDeleteRequest (password)
-    //TODO Return data : null
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new CustomException(ExceptionCode.NOT_FOUND_USER));
+
+        boolean matches = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+        if (matches) {
+
+            user.softDelete();
+
+            return new CommonResponse<>(true, "회원 탈퇴가 완료되었습니다.", null);
+        }
+
+        throw new CustomException(ExceptionCode.NOT_MATCHES_PASSWORD);
+    }
 
 }
