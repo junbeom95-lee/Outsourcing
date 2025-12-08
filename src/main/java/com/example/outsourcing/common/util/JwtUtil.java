@@ -1,5 +1,7 @@
 package com.example.outsourcing.common.util;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
@@ -32,4 +34,20 @@ public class JwtUtil {
                 .signWith(key, Jwts.SIG.HS256)                       // 서명 알고리즘과 비밀 키 = signature
                 .compact();                                          // jwt 발급
     }
+
+
+    // 토큰 검증
+    public boolean validateToken(String token) {
+        if (token == null || token.isEmpty()) return false;          // 토큰 없을 시 실패
+
+        try {
+            parser.parseSignedClaims(token);                         // 클레임 파싱
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {        // 개별 예외 분리 없음: 서명/형식/만료 등 모든 실패를 한 번에 처리
+            log.debug("Invalid JWT: {}", e.toString());
+            return false;
+        }
+    }
+
+
 }
