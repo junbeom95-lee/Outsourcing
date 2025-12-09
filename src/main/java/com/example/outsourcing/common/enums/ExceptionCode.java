@@ -14,7 +14,9 @@ public enum ExceptionCode {
     NOT_FOUND_TASK(HttpStatus.NOT_FOUND, "작업을 찾을 수 없습니다."),
     BAD_REQUEST_CREATE_TASK(HttpStatus.BAD_REQUEST, "제목과 담당자는 필수입니다."),
     NOT_FOUND_AUTHOR(HttpStatus.NOT_FOUND, "담당자를 찾을 수 없습니다."),
-    NOT_MATCHES_STATUS(HttpStatus.BAD_REQUEST,"유효하지 않은 상태 값입니다.")
+    NOT_MATCHES_STATUS(HttpStatus.BAD_REQUEST,"유효하지 않은 상태 값입니다."),
+    NOT_MATCHES_PRIORITY(HttpStatus.BAD_REQUEST,"유효하지 않은 중요도 값입니다."),
+    NOT_AUTHOR_TASK(HttpStatus.FORBIDDEN, "수정 권한이 없습니다.")
     ;
 
     private final HttpStatus status;
