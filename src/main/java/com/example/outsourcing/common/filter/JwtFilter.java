@@ -26,17 +26,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
 
-        String requestURI = request.getRequestURI();
-
-        if (requestURI.equals("/api/auth/login") || requestURI.equals("/api/users")){filterChain.doFilter(request, response); return;}
-
         String authorizationHeader = request.getHeader("Authorization");
 
-        if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)){ response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"JWT토큰이 필요합니다.");return;}
+        if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)){
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"JWT토큰이 필요합니다.");return;}
 
         String token = authorizationHeader.substring(7);
 
-        if (!jwtUtil.validateToken(token)){response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        if (!jwtUtil.validateToken(token)){
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.getWriter().write("{\"error\": \"Unauthorized\"}");
             return;}
 
