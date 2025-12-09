@@ -14,9 +14,9 @@ public class ApiResponseDto<T> {
 
     public ApiResponseDto(boolean success, String message, T data) {
         this.success = success;
+        // test
         this.message = message;
         this.data = data;
         this.timestamp = LocalDateTime.now();
     }
-
 }
