@@ -1,16 +1,13 @@
-package com.example.outsourcing.domain.team.entity;
+package com.example.outsourcing.common.entity;
 
-import com.example.outsourcing.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Getter
 @Entity
-@Table(name="teams")
+@Table(name="team")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Team extends BaseEntity {
 
@@ -22,8 +19,6 @@ public class Team extends BaseEntity {
     private String name;
 
     private String description;
-
-    private LocalDate createdAt;
 
     // member List 는 후에
 
