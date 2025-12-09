@@ -69,7 +69,7 @@ public class JwtUtil {
         return parser.parseSignedClaims(token).getPayload();
     }
 
-    public Long extractUserId(String token) {return Long.valueOf(extractAllClaims(token).getSubject());}
+    public Long extractUserId(String token) { return Long.valueOf(extractAllClaims(token).getSubject()); }
 
     // public String extractUsername(String token) {return extractAllClaims(token).get("username",String.class);}
 
