@@ -11,6 +11,7 @@ import com.example.outsourcing.domain.user.model.request.UserDeleteRequest;
 import com.example.outsourcing.domain.user.model.request.UserUpdateRequest;
 import com.example.outsourcing.domain.user.model.response.*;
 import com.example.outsourcing.domain.user.repository.UserRepository;
+import com.example.outsourcing.domain.user_team.reposiotry.UserTeamRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserTeamRepository userTeamRepository;
 
 
     //회원가입
@@ -117,5 +119,15 @@ public class UserService {
         if (!matches) throw new CustomException(ExceptionCode.NOT_MATCHES_PASSWORD);
 
         return user;
+    }
+
+    //추가 가능한 사용자 조회
+    public CommonResponse<List<UserGetAvailableResponse>> getAvailable(Long teamId) {
+
+        List<User> userList = userTeamRepository.findAllUserByUser_idIsNull(teamId);
+
+        List<UserGetAvailableResponse> response = userList.stream().map(UserGetAvailableResponse::from).toList();
+
+        return new CommonResponse<>(true, "추가 가능한 사용자 목록 조회 성공", response);
     }
 }

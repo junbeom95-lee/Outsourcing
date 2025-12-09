@@ -75,4 +75,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    //추가 가능한 사용자 조회
+    @GetMapping("/available")
+    public ResponseEntity<CommonResponse<List<UserGetAvailableResponse>>> getAvailable(@RequestParam(required = false) Long teamId) {
+
+        CommonResponse<List<UserGetAvailableResponse>> response = userService.getAvailable(teamId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }
