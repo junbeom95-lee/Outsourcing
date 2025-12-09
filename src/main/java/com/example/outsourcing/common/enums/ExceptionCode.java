@@ -6,10 +6,14 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ExceptionCode {
 
+    //user
     EXISTS_EMAIL(HttpStatus.CONFLICT, "이미 사용 중인 이메일입니다."),
     EXISTS_USERNAME(HttpStatus.CONFLICT, "이미 존재하는 사용자명입니다."),
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     NOT_MATCHES_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다"),
+    FORBIDDEN(HttpStatus.FORBIDDEN, "권한이 없습니다."),
+
+    //task
     BAD_REQUEST_PARAMETER(HttpStatus.BAD_REQUEST, "잘못된 요청 파라미터입니다."),
     NOT_FOUND_TASK(HttpStatus.NOT_FOUND, "작업을 찾을 수 없습니다."),
     BAD_REQUEST_CREATE_TASK(HttpStatus.BAD_REQUEST, "제목과 담당자는 필수입니다."),
