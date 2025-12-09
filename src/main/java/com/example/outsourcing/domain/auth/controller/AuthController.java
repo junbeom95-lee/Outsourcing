@@ -35,6 +35,8 @@ public class AuthController {
 
         CommonResponse<AuthPasswordCheckResponse> response = authService.checkPassword(userId, request);
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+
+        return ResponseEntity.status(status).body(response);
     }
 }
