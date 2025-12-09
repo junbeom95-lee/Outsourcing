@@ -39,15 +39,15 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String generateToken(String email) {
+    public String generateToken(Long userId, String username) {
         Date now = new Date();
-        return  BEARER_PREFIX +
-                Jwts.builder()
-                .claim("email", email)
-                .issuedAt(now)                                       // 발급 시간
-                .expiration(new Date(now.getTime() + TOKEN_TIME))    // 토큰 유효시간
-                .signWith(key, Jwts.SIG.HS256)                       // 서명 알고리즘과 비밀 키 = signature
-                .compact();                                          // jwt 발급
+        return Jwts.builder()
+                        .subject(userId.toString())
+                        .claim("username", username)
+                        .issuedAt(now)                                       // 발급 시간
+                        .expiration(new Date(now.getTime() + TOKEN_TIME))    // 토큰 유효시간
+                        .signWith(key, Jwts.SIG.HS256)                       // 서명 알고리즘과 비밀 키 = signature
+                        .compact();                                          // jwt 발급
     }
 
 
@@ -69,9 +69,10 @@ public class JwtUtil {
         return parser.parseSignedClaims(token).getPayload();
     }
 
-    public String extractEmailClaims(String token) {
-        return extractAllClaims(token).get("email", String.class);
-    }
+    public Long extractUserId(String token) {return Long.valueOf(extractAllClaims(token).getSubject());}
+
+    // public String extractUsername(String token) {return extractAllClaims(token).get("username",String.class);}
+
 
 
 }

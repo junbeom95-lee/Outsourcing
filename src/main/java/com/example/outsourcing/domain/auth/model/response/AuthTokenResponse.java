@@ -1,6 +1,5 @@
 package com.example.outsourcing.domain.auth.model.response;
 
-import com.example.outsourcing.common.util.JwtUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
