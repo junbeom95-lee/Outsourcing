@@ -9,10 +9,7 @@ import com.example.outsourcing.common.util.PasswordEncoder;
 import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
 import com.example.outsourcing.domain.user.model.request.UserDeleteRequest;
 import com.example.outsourcing.domain.user.model.request.UserUpdateRequest;
-import com.example.outsourcing.domain.user.model.response.UserCreateResponse;
-import com.example.outsourcing.domain.user.model.response.UserGetListResponse;
-import com.example.outsourcing.domain.user.model.response.UserGetOneResponse;
-import com.example.outsourcing.domain.user.model.response.UserUpdateResponse;
+import com.example.outsourcing.domain.user.model.response.*;
 import com.example.outsourcing.domain.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -77,46 +75,47 @@ public class UserService {
 
     //사용자 정보 수정
     @Transactional
-    public CommonResponse<UserUpdateResponse> update(Long id, @Valid UserUpdateRequest request) {
+    public CommonResponse<UserUpdateResponse> update(Long userId, Long id, @Valid UserUpdateRequest request) {
 
         boolean exitsEmail = userRepository.existsByEmail(request.getEmail());
 
         if (exitsEmail) throw new CustomException(ExceptionCode.EXISTS_EMAIL);
 
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new CustomException(ExceptionCode.NOT_FOUND_USER));
+        User user = getUser(userId, id, request.getPassword());
 
-        boolean matches = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        user.update(request);
 
-        if (matches) {
+        UserUpdateResponse response = UserUpdateResponse.from(user);
 
-            user.update(request);
+        return new CommonResponse<>(true, "사용자 정보가 수정되었습니다.", response);
 
-            UserUpdateResponse response = UserUpdateResponse.from(user);
 
-            return new CommonResponse<>(true, "사용자 정보가 수정되었습니다.", response);
-        }
-
-        throw new CustomException(ExceptionCode.NOT_MATCHES_PASSWORD);
     }
 
     //회원 탈퇴
     @Transactional
-    public CommonResponse<Void> delete(Long id, UserDeleteRequest request) {
+    public CommonResponse<Void> delete(Long userId, Long id, UserDeleteRequest request) {
+
+        User user = getUser(userId, id, request.getPassword());
+
+        user.softDelete();
+
+        return new CommonResponse<>(true, "회원 탈퇴가 완료되었습니다.", null);
+
+    }
+
+    //회원 검증 (id, password)
+    private User getUser(Long userId, Long id, String password) {
 
         User user = userRepository.findById(id).orElseThrow(
                 () -> new CustomException(ExceptionCode.NOT_FOUND_USER));
 
-        boolean matches = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        if (!Objects.equals(user.getId(), userId)) throw new CustomException(ExceptionCode.FORBIDDEN);
 
-        if (matches) {
+        boolean matches = passwordEncoder.matches(password, user.getPassword());
 
-            user.softDelete();
+        if (!matches) throw new CustomException(ExceptionCode.NOT_MATCHES_PASSWORD);
 
-            return new CommonResponse<>(true, "회원 탈퇴가 완료되었습니다.", null);
-        }
-
-        throw new CustomException(ExceptionCode.NOT_MATCHES_PASSWORD);
+        return user;
     }
-
 }

@@ -4,15 +4,13 @@ import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
 import com.example.outsourcing.domain.user.model.request.UserDeleteRequest;
 import com.example.outsourcing.domain.user.model.request.UserUpdateRequest;
-import com.example.outsourcing.domain.user.model.response.UserCreateResponse;
-import com.example.outsourcing.domain.user.model.response.UserGetListResponse;
-import com.example.outsourcing.domain.user.model.response.UserGetOneResponse;
-import com.example.outsourcing.domain.user.model.response.UserUpdateResponse;
+import com.example.outsourcing.domain.user.model.response.*;
 import com.example.outsourcing.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,7 +35,7 @@ public class UserController {
 
     //사용자 정보 조회 (단건)
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse<UserGetOneResponse>> getOne(@PathVariable Long id) {
+    public ResponseEntity<CommonResponse<UserGetOneResponse>> getOne( @PathVariable Long id) {
 
         CommonResponse<UserGetOneResponse> response = userService.getOne(id);
 
@@ -57,19 +55,22 @@ public class UserController {
 
     //사용자 정보 수정
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<UserUpdateResponse>> update(@PathVariable Long id,
+    public ResponseEntity<CommonResponse<UserUpdateResponse>> update(@AuthenticationPrincipal Long userId,
+                                                                     @PathVariable Long id,
                                                                      @RequestBody @Valid UserUpdateRequest request) {
 
-        CommonResponse<UserUpdateResponse> response = userService.update(id, request);
+        CommonResponse<UserUpdateResponse> response = userService.update(userId, id, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     //회원 탈퇴
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse<Void>> delete(@PathVariable Long id, @RequestBody @Valid UserDeleteRequest request) {
+    public ResponseEntity<CommonResponse<Void>> delete(@AuthenticationPrincipal Long userId,
+                                                       @PathVariable Long id,
+                                                       @RequestBody @Valid UserDeleteRequest request) {
 
-        CommonResponse<Void> response = userService.delete(id, request);
+        CommonResponse<Void> response = userService.delete(userId, id, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
