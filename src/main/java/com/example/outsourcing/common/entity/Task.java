@@ -47,7 +47,7 @@ public class Task extends BaseEntity{
     public void update(TaskUpdateRequest request) {
         this.title = request.getTitle();
         this.description = request.getDescription();
-        this.status = request.getStatus();
+        this.status = TaskStatus.valueOf(request.getStatus());
         this.priority = request.getPriority();
         this.dueDate = request.getDueDate();
     }
@@ -55,5 +55,7 @@ public class Task extends BaseEntity{
     public void updateStatus(TaskStatus status) {
         this.status = status;
     }
+
+
 
 }
