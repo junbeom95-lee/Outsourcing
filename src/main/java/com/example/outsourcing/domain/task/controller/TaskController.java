@@ -1,16 +1,19 @@
 package com.example.outsourcing.domain.task.controller;
 
+import com.example.outsourcing.common.enums.TaskStatus;
 import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.domain.task.dto.request.TaskCreateRequest;
 import com.example.outsourcing.domain.task.dto.request.TaskStatusChangeRequest;
 import com.example.outsourcing.domain.task.dto.request.TaskUpdateRequest;
 import com.example.outsourcing.domain.task.dto.response.TaskResponse;
 import com.example.outsourcing.domain.task.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -24,7 +27,7 @@ public class TaskController {
     public ResponseEntity<CommonResponse<Page<TaskResponse>>> getTasks(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String status,
+            @RequestParam(required = false) TaskStatus status,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Long assigneeId
             ) {
@@ -36,24 +39,24 @@ public class TaskController {
     public ResponseEntity<CommonResponse<TaskResponse>> getTaskSingle(@PathVariable Long id) {
         return ResponseEntity.ok(taskService.getTaskSingle(id));
     }
-//    @PostMapping
-//    public ResponseEntity<CommonResponse<TaskResponse>> createTask(@RequestBody TaskCreateRequest request) {
-//        return ResponseEntity.ok(taskService.createTask(request));
-//    }
+    @PostMapping
+    public ResponseEntity<CommonResponse<TaskResponse>> createTask(@AuthenticationPrincipal Long userId, @Valid @RequestBody TaskCreateRequest request) {
+        return ResponseEntity.ok(taskService.createTask(userId, request));
+    }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<TaskResponse>> updateTask(@PathVariable Long id, @RequestBody TaskUpdateRequest request) {
-        return ResponseEntity.ok(taskService.updateTask(id, request));
+    public ResponseEntity<CommonResponse<TaskResponse>> updateTask(@AuthenticationPrincipal Long userId,@PathVariable Long id, @Valid @RequestBody TaskUpdateRequest request) {
+        return ResponseEntity.ok(taskService.updateTask(userId, id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse<Void>> deleteTask(@PathVariable Long id) {
-        return ResponseEntity.ok(taskService.deleteTask(id));
+    public ResponseEntity<CommonResponse<Void>> deleteTask(@AuthenticationPrincipal Long userId, @PathVariable Long id) {
+        return ResponseEntity.ok(taskService.deleteTask(userId, id));
     }
 
-    @PostMapping("{id}/status")
-    public ResponseEntity<CommonResponse<TaskResponse>> changeTaskStatus(@PathVariable Long id, @RequestBody TaskStatusChangeRequest request) {
-        return ResponseEntity.ok(taskService.changeTaskStatus(id, request));
+    @PatchMapping("{id}/status")
+    public ResponseEntity<CommonResponse<TaskResponse>> changeTaskStatus(@AuthenticationPrincipal Long userId, @PathVariable Long id, @Valid @RequestBody TaskStatusChangeRequest request) {
+        return ResponseEntity.ok(taskService.changeTaskStatus(userId, id, request));
     }
 }
 
