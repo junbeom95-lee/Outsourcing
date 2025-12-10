@@ -71,7 +71,7 @@ public class JwtUtil {
 
     public Long extractUserId(String token) { return Long.valueOf(extractAllClaims(token).getSubject()); }
 
-    // public String extractUsername(String token) {return extractAllClaims(token).get("username",String.class);}
+    public String extractUsername(String token) {return extractAllClaims(token).get("username",String.class);}
 
 
 
