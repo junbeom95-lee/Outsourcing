@@ -19,15 +19,15 @@ import java.time.LocalDateTime;
 @Slf4j
 @RequiredArgsConstructor
 public class LoggingAop {
-//          execution(* com.example.outsourcing.domain.comment.service..*.createComment.*(..)) ||
-//          execution(* com.example.outsourcing.domain.comment.service..*.deleteComment.*(..)) ||
-//          execution(* com.example.outsourcing.domain.comment.service..*.updateComment.*(..)) ||
 
     @Around("""
             execution(* com.example.outsourcing.domain.task.service..*.createTask(..)) ||
             execution(* com.example.outsourcing.domain.task.service..*.updateTask(..)) ||
             execution(* com.example.outsourcing.domain.task.service..*.deleteTask(..)) ||
             execution(* com.example.outsourcing.domain.task.service..*.changeTaskStatus(..)) ||
+            execution(* com.example.outsourcing.domain.comment.service..*.createComment(..)) ||
+            execution(* com.example.outsourcing.domain.comment.service..*.deleteComment(..)) ||
+            execution(* com.example.outsourcing.domain.comment.service..*.updateComment(..)) ||
             execution(* com.example.outsourcing.domain.auth.service..*.login(..)) ||
             execution(* com.example.outsourcing.domain.user.service..*.delete(..))
             """)
