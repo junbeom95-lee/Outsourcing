@@ -25,8 +25,6 @@ public class TeamService {
     @Transactional
     public CommonResponse<TeamCreateResponse> create(TeamCreateRequest request) {
 
-
-
         // 팀 이름 중복 체크
         boolean exitsTeamName = teamRepository.existsByName(request.getName());
         // 중복된 팀 이름 예외 발생
@@ -75,8 +73,6 @@ public class TeamService {
     // 팀 삭제
     @Transactional
     public CommonResponse<Void> delete(Long teamId) {
-
-
 
         Team team = teamRepository.findById(teamId).orElseThrow(
                 () -> new CustomException(ExceptionCode.TEAM_NOT_FOUND)

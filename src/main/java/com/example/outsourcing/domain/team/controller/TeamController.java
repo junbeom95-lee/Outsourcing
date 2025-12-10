@@ -22,20 +22,7 @@ public class TeamController {
     private final TeamService teamService;
     private final UserService userService;
 
-    // 팀 목록 조회
-    //TODO  팀 목록 조회
-    //TODO URI : /api/teams, Method : GET
-    //TODO data List<TeamGetResponse> (id, name, description, createdAt, List<member> members)
-    //TODO List<member> (id, username, name, email, role, createdAt)
-    
-    
-    
-    
     // 팀 생성
-    // TODO URI : /api/teams, Method : POST
-    // TODO Request Body : TeamCreateRequest (name, description)
-    // TODO Response data : TeamCreateResponse (id, name, description, createdAt, List<MemberDto> members)
-    // TODO List<MemberDto> (id, username, name, email, role, createdAt)
     @PostMapping
     public ResponseEntity<CommonResponse<TeamCreateResponse>> create(@RequestBody @Valid TeamCreateRequest request) {
 
@@ -46,11 +33,6 @@ public class TeamController {
 
 
     // 팀 수정
-    // TODO URI : /api/teams/{id}, Method : PUT
-    // TODO Path Parameter : id (팀 ID)
-    // TODO Request Body : TeamUpdateRequest (name, description)
-    // TODO Response data : TeamUpdateResponse (id, name, description, createdAt, List<MemberDto> members)
-    // TODO List<MemberDto> (id, username, name, email, role, createdAt)
     @PutMapping("/{id}")
     public ResponseEntity<CommonResponse<TeamUpdateResponse>> update(@AuthenticationPrincipal Long userId,
                                                                      @PathVariable Long id,
@@ -62,9 +44,6 @@ public class TeamController {
     
     
     // 팀 삭제
-    // TODO URI : /api/teams/{id}, Method : DELETE
-    // TODO Path Parameter : id (팀 ID)
-    // TODO 성공 시 null, 실패 시 error message
     @DeleteMapping("/{id}")
     public ResponseEntity<CommonResponse<Void>> delete(@PathVariable Long id) {
 
