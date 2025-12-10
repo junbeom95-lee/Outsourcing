@@ -11,7 +11,6 @@ import com.example.outsourcing.domain.user.model.request.UserDeleteRequest;
 import com.example.outsourcing.domain.user.model.request.UserUpdateRequest;
 import com.example.outsourcing.domain.user.model.response.*;
 import com.example.outsourcing.domain.user.repository.UserRepository;
-import com.example.outsourcing.domain.user_team.reposiotry.UserTeamRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -88,7 +87,6 @@ public class UserService {
         UserUpdateResponse response = UserUpdateResponse.from(user);
 
         return new CommonResponse<>(true, "사용자 정보가 수정되었습니다.", response);
-
 
     }
 

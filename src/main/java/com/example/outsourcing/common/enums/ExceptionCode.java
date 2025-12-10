@@ -28,9 +28,22 @@ public enum ExceptionCode {
     NOT_FOUND_PARENT_COMMENT(HttpStatus.NOT_FOUND, "부모 댓글을 찾을 수 없습니다."),
     NOT_AUTHOR_UPDATE_COMMENT(HttpStatus.FORBIDDEN, "댓글을 수정할 권한이 없습니다."),
     NOT_AUTHOR_DELETE_COMMENT(HttpStatus.FORBIDDEN, "댓글을 삭제할 권한이 없습니다."),
-    REQUIRED_COMMENT(HttpStatus.BAD_REQUEST, "댓글 내용은 필수입니다.")
-    ;
+    REQUIRED_COMMENT(HttpStatus.BAD_REQUEST, "댓글 내용은 필수입니다."),
 
+    // team
+    TEAM_NOT_FOUND(HttpStatus.NOT_FOUND, "팀을 찾을 수 없습니다."),
+    BAD_REQUEST_CREATE_TEAM(HttpStatus.NOT_FOUND , "팀 이름은 필수입니다."),
+    EXISTS_TEAM_NAME(HttpStatus.NOT_FOUND , "이미 존재하는 팀 이름입니다."),
+    FORBIDDEN_CREATE(HttpStatus.FORBIDDEN, "생성 권한이 없습니다."),
+    FORBIDDEN_UPDATE(HttpStatus.FORBIDDEN, "수정 권한이 없습니다."),
+    FORBIDDEN_DELETE(HttpStatus.FORBIDDEN, "삭제 권한이 없습니다."),
+    TEAM_HAS_MEMBER(HttpStatus.CONFLICT, "팀에 멤버가 존재하여 삭제할 수 없습니다."),
+    ALREADY_TEAM_MEMBER(HttpStatus.CONFLICT, "이미 팀에 속한 멤버입니다."),
+    TEAM_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "이미 팀에 속한 멤버입니다."),
+    FORBIDDEN_REMOVE(HttpStatus.NOT_FOUND, "이미 팀에 속한 멤버입니다."),
+
+
+    ;
 
     private final HttpStatus status;
     private final String message;
