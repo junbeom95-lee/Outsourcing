@@ -1,14 +1,14 @@
 package com.example.outsourcing.domain.team.controller;
 
 import com.example.outsourcing.common.model.CommonResponse;
+import com.example.outsourcing.domain.team.model.response.TeamGetDetailResponse;
 import com.example.outsourcing.domain.team.model.response.TeamGetListResponse;
+import com.example.outsourcing.domain.team.model.response.TeamGetMemberResponse;
 import com.example.outsourcing.domain.team.service.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,4 +27,23 @@ public class TeamController {
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    //팀 상세 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<CommonResponse<TeamGetDetailResponse>> getTeamDetail(@PathVariable Long id) {
+
+        CommonResponse<TeamGetDetailResponse> response = teamService.getTeamDetail(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //팀 멤버 조회
+    @GetMapping("/{teamId}/members")
+    public ResponseEntity<CommonResponse<List<TeamGetMemberResponse>>> getTeamMemberList(@PathVariable Long teamId) {
+
+        CommonResponse<List<TeamGetMemberResponse>> response = teamService.getTemMemberList(teamId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 }
