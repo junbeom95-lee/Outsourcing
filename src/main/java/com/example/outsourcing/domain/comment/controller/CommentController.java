@@ -1,6 +1,5 @@
 package com.example.outsourcing.domain.comment.controller;
 
-import com.example.outsourcing.common.entity.User;
 import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.domain.comment.model.request.CommentCreateRequest;
 import com.example.outsourcing.domain.comment.model.request.CommentUpdateRequest;
@@ -10,8 +9,6 @@ import com.example.outsourcing.domain.comment.model.response.CommentUpdateRespon
 import com.example.outsourcing.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,6 +33,17 @@ public class CommentController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    // 댓글 조회
+    @GetMapping("/api/tasks/{taskId}/comments")
+    public ResponseEntity<CommonResponse<List<CommentGetResponse>>> getComments(
+            @PathVariable Long taskId,
+            @RequestParam(defaultValue = "0") Integer page,  // 페이지 0
+            @RequestParam(defaultValue = "10") Integer size,  // 페이지 크기 10
+            @RequestParam(defaultValue = "newest") String sort  // 기본값 최신순
+    ) {
+        CommonResponse<List<CommentGetResponse>> response = commentService.getComments(taskId, page, size, sort);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     // 댓글 수정
     @PutMapping("/api/tasks/{taskId}/comments/{commentId}")
@@ -48,5 +56,13 @@ public class CommentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
+    // 댓글 삭제
+    @DeleteMapping("/api/tasks/{taskId}/comments/{commentId}")
+    public ResponseEntity<CommonResponse<Void>> commentDelete(
+            @PathVariable Long taskId,
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal Long user) {
+        CommonResponse<Void> response = commentService.deleteComment(user, commentId, taskId);
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+    }
 }
