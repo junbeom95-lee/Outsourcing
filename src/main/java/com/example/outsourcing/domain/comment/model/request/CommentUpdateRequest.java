@@ -1,0 +1,9 @@
+package com.example.outsourcing.domain.comment.model.request;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+@Getter
+public class CommentUpdateRequest {
+    @NotBlank
+    private String content;
+}
