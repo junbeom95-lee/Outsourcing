@@ -18,13 +18,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/comments")
+@RequestMapping("/api/tasks")
 @Slf4j
 public class CommentController {
     private final CommentService commentService;
 
     // 댓글 생성
-    @PostMapping("/api/tasks/{taskId}/comments")
+    @PostMapping("/{taskId}/comments")
     public ResponseEntity<CommonResponse<CommentCreateResponse>> createComment(
             @PathVariable Long taskId,
             @AuthenticationPrincipal Long user,
@@ -34,7 +34,7 @@ public class CommentController {
     }
 
     // 댓글 조회
-    @GetMapping("/api/tasks/{taskId}/comments")
+    @GetMapping("/{taskId}/comments")
     public ResponseEntity<CommonResponse<List<CommentGetResponse>>> getComments(
             @PathVariable Long taskId,
             @RequestParam(defaultValue = "0") Integer page,  // 페이지 0
@@ -46,7 +46,7 @@ public class CommentController {
     }
 
     // 댓글 수정
-    @PutMapping("/api/tasks/{taskId}/comments/{commentId}")
+    @PutMapping("/{taskId}/comments/{commentId}")
     public ResponseEntity<CommonResponse<CommentUpdateResponse>> commentUpdate(
             @PathVariable Long taskId,
             @PathVariable Long commentId,
@@ -57,7 +57,7 @@ public class CommentController {
     }
 
     // 댓글 삭제
-    @DeleteMapping("/api/tasks/{taskId}/comments/{commentId}")
+    @DeleteMapping("/{taskId}/comments/{commentId}")
     public ResponseEntity<CommonResponse<Void>> commentDelete(
             @PathVariable Long taskId,
             @PathVariable Long commentId,
