@@ -22,22 +22,21 @@ import java.util.stream.IntStream;
 
 @RestController
 @AllArgsConstructor
-@Slf4j
+@RequestMapping("/api/dashboard")
 public class DashboardController {
     private final DashboardService dashboardService;
-    @GetMapping("/api/dashboard/stats")
+    @GetMapping("/stats")
     public ResponseEntity<CommonResponse<DashboardStatsResponse>> dashboardStats(@AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(dashboardService.dashboardStats(userId));
     }
 
-    @GetMapping("/api/dashboard/tasks")
+    @GetMapping("/tasks")
     public ResponseEntity<CommonResponse<DashboardMyTaskDto>> myTaskSummary(@AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(dashboardService.myTaskSummary(userId));
     }
-    @GetMapping("/api/dashboard/weekly-trend")
+    @GetMapping("/weekly-trend")
     public ResponseEntity<CommonResponse<List<DashboardWeelkyResponse>>> weeklyTrend(@AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(dashboardService.weeklyTrend(userId));
     }
-
 
 }
