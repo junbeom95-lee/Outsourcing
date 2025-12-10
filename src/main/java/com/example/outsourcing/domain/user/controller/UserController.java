@@ -8,6 +8,7 @@ import com.example.outsourcing.domain.user.model.response.*;
 import com.example.outsourcing.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -27,6 +29,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<CommonResponse<UserCreateResponse>> create(@RequestBody @Valid UserCreateRequest request) {
 
+        log.info("회원가입 요청 들어옴");
         CommonResponse<UserCreateResponse> response = userService.create(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
