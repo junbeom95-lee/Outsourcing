@@ -19,7 +19,6 @@ public class TaskUpdateRequest {
     private String title;
     @NotBlank
     private String description;
-    @NotBlank
     @Pattern(regexp = "TODO|IN_PROGRESS|DONE")
     private String status;
     @NotBlank
