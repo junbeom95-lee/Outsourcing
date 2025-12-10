@@ -2,6 +2,7 @@ package com.example.outsourcing.domain.team.service;
 
 import com.example.outsourcing.common.entity.Team;
 import com.example.outsourcing.common.enums.ExceptionCode;
+import com.example.outsourcing.common.enums.UserRole;
 import com.example.outsourcing.common.exception.CustomException;
 import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.domain.team.dto.request.TeamCreateRequest;
@@ -11,6 +12,7 @@ import com.example.outsourcing.domain.team.dto.response.TeamUpdateResponse;
 import com.example.outsourcing.domain.team.repository.TeamRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +25,10 @@ public class TeamService {
 
     // 팀 생성
     @Transactional
-    public CommonResponse<TeamCreateResponse> create(TeamCreateRequest request) {
+    public CommonResponse<TeamCreateResponse> create(String authority, TeamCreateRequest request) {
+
+        // 권한 확인
+        if (!UserRole.ADMIN.name().equals(authority)) throw new CustomException(ExceptionCode.FORBIDDEN_CREATE);
 
         // 팀 이름 중복 체크
         boolean exitsTeamName = teamRepository.existsByName(request.getName());
@@ -45,10 +50,10 @@ public class TeamService {
 
     // 팀 수정
     @Transactional
-    public CommonResponse<TeamUpdateResponse> update(Long userId, Long teamId, @Valid TeamUpdateRequest request) {
+    public CommonResponse<TeamUpdateResponse> update(String authority, Long teamId, @Valid TeamUpdateRequest request) {
 
         // 작성자 권한 확인
-
+        if (!UserRole.ADMIN.name().equals(authority)) throw new CustomException(ExceptionCode.FORBIDDEN_UPDATE);
 
         // 이름 중복 체크
         boolean exitsTeamName = teamRepository.existsByName(request.getName());
@@ -72,7 +77,9 @@ public class TeamService {
 
     // 팀 삭제
     @Transactional
-    public CommonResponse<Void> delete(Long teamId) {
+    public CommonResponse<Void> delete(String authority, Long teamId) {
+
+        if (!UserRole.ADMIN.name().equals(authority)) throw new CustomException(ExceptionCode.FORBIDDEN_DELETE);
 
         Team team = teamRepository.findById(teamId).orElseThrow(
                 () -> new CustomException(ExceptionCode.TEAM_NOT_FOUND)
