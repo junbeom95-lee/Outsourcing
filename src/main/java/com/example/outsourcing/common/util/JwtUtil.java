@@ -1,5 +1,6 @@
 package com.example.outsourcing.common.util;
 
+import com.example.outsourcing.common.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
@@ -39,15 +40,16 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String generateToken(Long userId, String username) {
+    public String generateToken(Long userId, String username, UserRole role) {
         Date now = new Date();
         return Jwts.builder()
-                        .subject(userId.toString())
-                        .claim("username", username)
-                        .issuedAt(now)                                       // 발급 시간
-                        .expiration(new Date(now.getTime() + TOKEN_TIME))    // 토큰 유효시간
-                        .signWith(key, Jwts.SIG.HS256)                       // 서명 알고리즘과 비밀 키 = signature
-                        .compact();                                          // jwt 발급
+                .subject(userId.toString())
+                .claim("username", username)
+                .claim("role", role)
+                .issuedAt(now)                                       // 발급 시간
+                .expiration(new Date(now.getTime() + TOKEN_TIME))    // 토큰 유효시간
+                .signWith(key, Jwts.SIG.HS256)                       // 서명 알고리즘과 비밀 키 = signature
+                .compact();                                          // jwt 발급
     }
 
 
@@ -71,8 +73,12 @@ public class JwtUtil {
 
     public Long extractUserId(String token) { return Long.valueOf(extractAllClaims(token).getSubject()); }
 
-    public String extractUsername(String token) {return extractAllClaims(token).get("username",String.class);}
+    public String extractUsername(String token) { return extractAllClaims(token).get("username", String.class); }
 
+    public UserRole extractUserRole(String token) {
+        String role = extractAllClaims(token).get("role", String.class);
+        return UserRole.valueOf(role);
+    }
 
 
 }
