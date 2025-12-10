@@ -20,8 +20,17 @@ public enum ExceptionCode {
     NOT_FOUND_AUTHOR(HttpStatus.NOT_FOUND, "담당자를 찾을 수 없습니다."),
     NOT_MATCHES_STATUS(HttpStatus.BAD_REQUEST,"유효하지 않은 상태 값입니다."),
     NOT_MATCHES_PRIORITY(HttpStatus.BAD_REQUEST,"유효하지 않은 중요도 값입니다."),
-    NOT_AUTHOR_TASK(HttpStatus.FORBIDDEN, "수정 권한이 없습니다.")
+    NOT_AUTHOR_TASK(HttpStatus.FORBIDDEN, "수정 권한이 없습니다."),
+
+
+    // comment
+    NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
+    NOT_FOUND_PARENT_COMMENT(HttpStatus.NOT_FOUND, "부모 댓글을 찾을 수 없습니다."),
+    NOT_AUTHOR_UPDATE_COMMENT(HttpStatus.FORBIDDEN, "댓글을 수정할 권한이 없습니다."),
+    NOT_AUTHOR_DELETE_COMMENT(HttpStatus.FORBIDDEN, "댓글을 삭제할 권한이 없습니다."),
+    REQUIRED_COMMENT(HttpStatus.BAD_REQUEST, "댓글 내용은 필수입니다.")
     ;
+
 
     private final HttpStatus status;
     private final String message;
