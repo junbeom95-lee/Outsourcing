@@ -6,16 +6,9 @@ import com.example.outsourcing.common.enums.ExceptionCode;
 import com.example.outsourcing.common.enums.UserRole;
 import com.example.outsourcing.common.exception.CustomException;
 import com.example.outsourcing.common.model.CommonResponse;
-import com.example.outsourcing.domain.user_team.model.request.TeamAddMemberRequest;
-import com.example.outsourcing.domain.user_team.model.response.TeamAddMemberResponse;
 import com.example.outsourcing.domain.team.model.response.TeamGetDetailResponse;
 import com.example.outsourcing.domain.team.model.response.TeamGetListResponse;
 import com.example.outsourcing.domain.team.model.response.TeamGetMemberResponse;
-import com.example.outsourcing.common.entity.Team;
-import com.example.outsourcing.common.enums.ExceptionCode;
-import com.example.outsourcing.common.enums.UserRole;
-import com.example.outsourcing.common.exception.CustomException;
-import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.domain.team.model.request.TeamCreateRequest;
 import com.example.outsourcing.domain.team.model.request.TeamUpdateRequest;
 import com.example.outsourcing.domain.team.model.response.TeamCreateResponse;
@@ -111,7 +104,7 @@ public class TeamService {
 
         // 팀 조회 (없으면 에러)
         Team team = teamRepository.findById(teamId).orElseThrow(
-                () -> new CustomException(ExceptionCode.TEAM_NOT_FOUND)
+                () -> new CustomException(ExceptionCode.NOT_FOUND_TEAM)
         );
 
         // 팀 정보 수정
@@ -132,7 +125,7 @@ public class TeamService {
         if (!UserRole.ADMIN.name().equals(authority)) throw new CustomException(ExceptionCode.FORBIDDEN_DELETE);
 
         Team team = teamRepository.findById(teamId).orElseThrow(
-                () -> new CustomException(ExceptionCode.TEAM_NOT_FOUND)
+                () -> new CustomException(ExceptionCode.NOT_FOUND_TEAM)
         );
 
         // 팀에 멤버가 있는지 확인은 후에 추가

@@ -31,10 +31,17 @@ public class UserTeamController {
     }
 
 
-    //TODO 팀 멤버 제거
-    //TODO Method : DELETE URI : /api/teams/{teamId}/members/{userId}
-    //TODO PathVariable : Long teamId, Long userId
-    //TODO UserRole 필요
-    //TODO Data : null
+    //팀 멤버 제거
+    @DeleteMapping("/{teamId}/members/{userId}")
+    public ResponseEntity<CommonResponse<Void>> deleteMember(Authentication authentication,
+                                                             @PathVariable Long teamId,
+                                                             @PathVariable Long userId) {
+
+        String authority = authentication.getAuthorities().stream().findFirst().get().getAuthority();
+
+        CommonResponse<Void> response = userTeamService.deleteMember(authority, teamId, userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
 }

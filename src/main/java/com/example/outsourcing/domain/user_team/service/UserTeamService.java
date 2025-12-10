@@ -28,7 +28,6 @@ public class UserTeamService {
     @Transactional
     public CommonResponse<TeamAddMemberResponse> addMember(String authority, Long teamId, TeamAddMemberRequest request) {
 
-
         if(!UserRole.ADMIN.name().equals(authority)) throw new CustomException(ExceptionCode.FORBIDDEN);
 
         User user = userRepository.findById(request.getUserId()).orElseThrow(
@@ -50,10 +49,22 @@ public class UserTeamService {
         return new CommonResponse<>(true, "팀 멤버가 추가되었습니다.", teamAddMemberResponse);
     }
 
+    //팀 멤버 제거
+    @Transactional
+    public CommonResponse<Void> deleteMember(String authority, Long teamId, Long userId) {
 
+        if(!UserRole.ADMIN.name().equals(authority)) throw new CustomException(ExceptionCode.FORBIDDEN_DELETE_USER_TEAM);
 
-    //TODO 팀 멤버 제거
-    //TODO Method : DELETE URI : /api/teams/{teamId}/members/{userId}
-    //TODO Param : UserRole role, Long teamId, Long userId
-    //TODO Data : null
+        User user = userRepository.findById(userId ).orElseThrow(
+                () -> new CustomException(ExceptionCode.NOT_FOUND_TEAM_MEMBER));
+
+        Team team = teamRepository.findById(teamId).orElseThrow(
+                () -> new CustomException(ExceptionCode.NOT_FOUND_TEAM));
+
+        User_Team user_team = new User_Team(user, team);
+
+        userTeamRepository.delete(user_team);
+
+        return new CommonResponse<>(true, "팀 멤버가 제거되었습니다.", null);
+    }
 }
