@@ -26,8 +26,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserTeamRepository userTeamRepository;
-
 
     //회원가입
     @Transactional
@@ -124,7 +122,7 @@ public class UserService {
     //추가 가능한 사용자 조회
     public CommonResponse<List<UserGetAvailableResponse>> getAvailable(Long teamId) {
 
-        List<User> userList = userTeamRepository.findAllUserByUser_idIsNull(teamId);
+        List<User> userList = userRepository.findAllUserByUser_idIsNull(teamId);
 
         List<UserGetAvailableResponse> response = userList.stream().map(UserGetAvailableResponse::from).toList();
 
