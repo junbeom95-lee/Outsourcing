@@ -3,8 +3,11 @@ package com.example.outsourcing.domain.team.service;
 import com.example.outsourcing.common.entity.Team;
 import com.example.outsourcing.common.entity.User;
 import com.example.outsourcing.common.enums.ExceptionCode;
+import com.example.outsourcing.common.enums.UserRole;
 import com.example.outsourcing.common.exception.CustomException;
 import com.example.outsourcing.common.model.CommonResponse;
+import com.example.outsourcing.domain.user_team.model.request.TeamAddMemberRequest;
+import com.example.outsourcing.domain.user_team.model.response.TeamAddMemberResponse;
 import com.example.outsourcing.domain.team.model.response.TeamGetDetailResponse;
 import com.example.outsourcing.domain.team.model.response.TeamGetListResponse;
 import com.example.outsourcing.domain.team.model.response.TeamGetMemberResponse;
@@ -60,13 +63,4 @@ public class TeamService {
         return new CommonResponse<>(true, "팀 멤버 조회 성공", teamGetMemberListResponse);
     }
 
-    //TODO 팀 멤버 추가
-    //TODO Param : UserRole role, Long teamId, TeamAddMemberRequest (userId)
-    //TODO Data : TeamAddMemberResponse (id, name, description, createdAt, members)
-    //TODO members List<> (id, username, name)
-
-    //TODO 팀 멤버 제거
-    //TODO Method : DELETE URI : /api/teams/{teamId}/members/{userId}
-    //TODO Param : UserRole role, Long teamId, Long userId
-    //TODO Data : null
 }

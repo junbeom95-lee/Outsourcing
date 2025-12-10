@@ -32,6 +32,10 @@ public enum ExceptionCode {
 
     //team
     NOT_FOUND_TEAM(HttpStatus.NOT_FOUND, "팀을 찾을 수 없습니다."),
+
+
+    //user_team
+    EXISTS_USER_TEAM(HttpStatus.CONFLICT, "이미 팀에 속한 멤버입니다."),
     ;
 
     private final HttpStatus status;

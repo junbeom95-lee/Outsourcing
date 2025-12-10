@@ -46,18 +46,4 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    //TODO 팀 멤버 추가
-    //TODO Method : POST URI : /api/teams/{teamId}/members
-    //TODO PathVariable : Long teamId
-    //TODO UserRole 필요
-    //TODO RequestBody (userId)
-    //TODO Data : TeamAddMemberResponse (id, name, description, createdAt, members)
-    //TODO members List<> (id, username, name)
-
-
-    //TODO 팀 멤버 제거
-    //TODO Method : DELETE URI : /api/teams/{teamId}/members/{userId}
-    //TODO PathVariable : Long teamId, Long userId
-    //TODO UserRole 필요
-    //TODO Data : null
 }
