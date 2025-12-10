@@ -16,6 +16,7 @@ public class TaskResponse {
 
     private final Long id;
     private final String title;
+    private final String description;
     private final TaskStatus status;
     private final TaskPriority priority;
     private final Long assigneeId;
@@ -28,6 +29,7 @@ public class TaskResponse {
         return new TaskResponse(
                 task.getId(),
                 task.getTitle(),
+                task.getDescription(),
                 task.getStatus(),
                 task.getPriority(),
                 task.getAssignee().getId(),
@@ -42,6 +44,7 @@ public class TaskResponse {
         return new TaskResponse(
                 task.getId(),
                 task.getTitle(),
+                task.getDescription(),
                 task.getStatus(),
                 task.getPriority(),
                 task.getAssignee().getId(),
