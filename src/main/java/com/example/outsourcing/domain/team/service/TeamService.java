@@ -5,14 +5,13 @@ import com.example.outsourcing.common.enums.ExceptionCode;
 import com.example.outsourcing.common.enums.UserRole;
 import com.example.outsourcing.common.exception.CustomException;
 import com.example.outsourcing.common.model.CommonResponse;
-import com.example.outsourcing.domain.team.dto.request.TeamCreateRequest;
-import com.example.outsourcing.domain.team.dto.request.TeamUpdateRequest;
-import com.example.outsourcing.domain.team.dto.response.TeamCreateResponse;
-import com.example.outsourcing.domain.team.dto.response.TeamUpdateResponse;
+import com.example.outsourcing.domain.team.model.request.TeamCreateRequest;
+import com.example.outsourcing.domain.team.model.request.TeamUpdateRequest;
+import com.example.outsourcing.domain.team.model.response.TeamCreateResponse;
+import com.example.outsourcing.domain.team.model.response.TeamUpdateResponse;
 import com.example.outsourcing.domain.team.repository.TeamRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,4 +1,4 @@
-package com.example.outsourcing.domain.team.dto.response;
+package com.example.outsourcing.domain.team.model.response;
 
 import com.example.outsourcing.common.entity.Team;
 import lombok.AllArgsConstructor;

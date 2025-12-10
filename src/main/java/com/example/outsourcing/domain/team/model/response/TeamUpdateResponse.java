@@ -1,4 +1,4 @@
-package com.example.outsourcing.domain.team.dto.response;
+package com.example.outsourcing.domain.team.model.response;
 
 import com.example.outsourcing.common.entity.Team;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class TeamDeleteResponse {
+public class TeamUpdateResponse {
 
     private Long id;
     private String name;
@@ -18,8 +18,8 @@ public class TeamDeleteResponse {
     private LocalDateTime createdAt;
     private List<Object> members;
 
-    public static TeamDeleteResponse from(Team team) {
-        return new TeamDeleteResponse(
+    public static TeamUpdateResponse from(Team team) {
+        return new TeamUpdateResponse(
                 team.getId(),
                 team.getName(),
                 team.getDescription(),
@@ -27,4 +27,5 @@ public class TeamDeleteResponse {
                 new ArrayList<>()
         );
     }
+
 }

@@ -1,10 +1,10 @@
 package com.example.outsourcing.domain.team.controller;
 
 import com.example.outsourcing.common.model.CommonResponse;
-import com.example.outsourcing.domain.team.dto.request.TeamCreateRequest;
-import com.example.outsourcing.domain.team.dto.request.TeamUpdateRequest;
-import com.example.outsourcing.domain.team.dto.response.TeamCreateResponse;
-import com.example.outsourcing.domain.team.dto.response.TeamUpdateResponse;
+import com.example.outsourcing.domain.team.model.request.TeamCreateRequest;
+import com.example.outsourcing.domain.team.model.request.TeamUpdateRequest;
+import com.example.outsourcing.domain.team.model.response.TeamCreateResponse;
+import com.example.outsourcing.domain.team.model.response.TeamUpdateResponse;
 import com.example.outsourcing.domain.team.service.TeamService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

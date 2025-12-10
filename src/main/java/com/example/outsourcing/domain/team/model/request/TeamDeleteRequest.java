@@ -1,4 +1,4 @@
-package com.example.outsourcing.domain.team.dto.request;
+package com.example.outsourcing.domain.team.model.request;
 
 import lombok.Getter;
 
