@@ -31,7 +31,7 @@ public class AuthService {
 
         if (!matches) throw new CustomException(ExceptionCode.NOT_MATCHES_PASSWORD);
 
-        String token = jwtUtil.generateToken(user.getId(), user.getUsername());
+        String token = jwtUtil.generateToken(user.getId(), user.getUsername(), user.getRole());
 
         AuthTokenResponse response = AuthTokenResponse.from(token);
 
