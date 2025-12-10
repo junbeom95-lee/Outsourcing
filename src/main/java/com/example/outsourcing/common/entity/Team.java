@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Entity
 @Table(name="team")
@@ -20,6 +22,11 @@ public class Team extends BaseEntity {
 
     private String description;
 
-    // member List 는 후에
+    @OneToMany(mappedBy="team", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<User_Team> userTeamList;
 
+    public Team(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }
