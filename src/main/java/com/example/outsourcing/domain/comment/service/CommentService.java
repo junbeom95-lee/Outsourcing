@@ -56,4 +56,39 @@ public class CommentService {
         return new CommonResponse<>(true, "댓글이 작성되었습니다.", response);  // 공통응답객체로 return
     }
 
+
+
+    // 댓글 수정
+    @Transactional
+    public CommonResponse<CommentUpdateResponse> updateComment(Long userId, Long commentId, Long taskId, String content) {
+        // 댓글을 찾을 수 없는 예외처리 ❗수정 필요
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));// 댓글이 없는 경우
+
+        // 사용자를 찾을 수 없는 경우 예외처리
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        // 댓글 수정 권한 예외처리
+        if (!comment.getUser().getId().equals(userId)){
+            throw new IllegalArgumentException("댓글을 수정할 권한이 없습니다.");
+        }
+
+        // 작업 예외처리 ❗수정 필요
+        Task task = taskRepository.findById(taskId).orElseThrow(
+                () -> new IllegalArgumentException("작업을 찾을 수 없습니다.")
+        );
+
+        // 댓글 내용 비어있는 경우 예외처리 ❗수정 필요
+        if (content == null || content.isEmpty()) {
+            throw new IllegalArgumentException("댓글 내용은 필수입니다.");
+        }
+
+        comment.updateComment(content);  // 댓글 내용 수정
+        Comment updateComment = commentRepository.save(comment); // 댓글 수정 후 저장
+
+        CommentUpdateResponse response = CommentUpdateResponse.fromUpdate(updateComment);
+        return new CommonResponse<>(true, "댓글이 수정되었습니다.", response);
+    }
+
+
 }

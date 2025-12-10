@@ -32,9 +32,20 @@ public class CommentController {
             @PathVariable Long taskId,
             @AuthenticationPrincipal Long user,
             @RequestBody CommentCreateRequest request) {
-        log.info("debug1");
         CommonResponse<CommentCreateResponse> response = commentService.createComment(user, taskId, request.getContent(), request.getParentId());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+
+    // 댓글 수정
+    @PutMapping("/api/tasks/{taskId}/comments/{commentId}")
+    public ResponseEntity<CommonResponse<CommentUpdateResponse>> commentUpdate(
+            @PathVariable Long taskId,
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal Long user,
+            @RequestBody CommentUpdateRequest request) {
+        CommonResponse<CommentUpdateResponse> response = commentService.updateComment(user, commentId, taskId, request.getContent());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
