@@ -91,7 +91,6 @@ public class UserService {
 
         return new CommonResponse<>(true, "사용자 정보가 수정되었습니다.", response);
 
-
     }
 
     //회원 탈퇴

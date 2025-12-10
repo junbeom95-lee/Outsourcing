@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class TeamDto {
-    private String teamName;
+    private String name;
     private String description;
 }
