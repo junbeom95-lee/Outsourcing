@@ -13,6 +13,7 @@ import com.example.outsourcing.domain.auth.model.response.AuthTokenResponse;
 import com.example.outsourcing.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public CommonResponse<AuthTokenResponse> login(AuthLoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow(
                 () -> new CustomException(ExceptionCode.NOT_FOUND_USER));
@@ -37,6 +39,7 @@ public class AuthService {
 
     }
 
+    @Transactional
     public CommonResponse<AuthPasswordCheckResponse> checkPassword(Long userId, AuthPasswordCheckRequest request) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new CustomException(ExceptionCode.NOT_FOUND_USER));
