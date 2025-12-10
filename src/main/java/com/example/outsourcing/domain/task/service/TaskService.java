@@ -85,7 +85,7 @@ public class TaskService {
                 assignee,
                 request.getTitle(),
                 request.getDescription(),
-                request.getTaskStatus(),
+                TaskStatus.TODO,
                 request.getTaskPriority(),
                 request.getDueDate()
         );
@@ -97,7 +97,7 @@ public class TaskService {
     @Transactional
     public CommonResponse<TaskResponse> updateTask(Long userId, Long id, TaskUpdateRequest request) {
         //id 검증 로직
-        User assignee = taskRepository.findByAssignee_Id(userId).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_USER));
+        User assignee = userRepository.findById(userId).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_USER));
 
         Task task = taskRepository.findById(id).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_TASK));
         if (!assignee.getId().equals(task.getAssignee().getId())) {

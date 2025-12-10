@@ -36,6 +36,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Optional<Task> findById(@Param("assigneeId") Long id);
 
     @EntityGraph(attributePaths = "assignee")
-    @Query("select t from Task t where t.assignee.id =: assigneeId")
+    @Query("select t from Task t where t.assignee.id = :assigneeId")
     Optional<User> findByAssignee_Id(@Param("assigneeId")Long assigneeId);
 }
