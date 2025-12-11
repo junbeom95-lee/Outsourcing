@@ -6,6 +6,7 @@ import com.example.outsourcing.common.enums.ExceptionCode;
 import com.example.outsourcing.common.enums.TaskStatus;
 import com.example.outsourcing.common.exception.CustomException;
 import com.example.outsourcing.common.model.CommonResponse;
+import com.example.outsourcing.domain.activity.util.ActivityLogSaveUtil;
 import com.example.outsourcing.domain.task.dto.request.TaskCreateRequest;
 import com.example.outsourcing.domain.task.dto.request.TaskStatusChangeRequest;
 import com.example.outsourcing.domain.task.dto.request.TaskUpdateRequest;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final ActivityLogSaveUtil activityLogSaveUtil;
 
     @Transactional(readOnly = true)
     public CommonResponse<Page<TaskResponse>> getTasks(Pageable pageable, TaskStatus status, String search, Long assigneeId) {
@@ -89,9 +91,11 @@ public class TaskService {
                 request.getTaskPriority(),
                 request.getDueDate()
         );
-        taskRepository.save(task);
+        Task savedTask = taskRepository.save(task);
 
-        return new CommonResponse<>(true, "작업이 생성되었습니다.", TaskResponse.from(task));
+        activityLogSaveUtil.saveActivityTaskCreate(savedTask.getId(), userId, request.getTitle());
+
+        return new CommonResponse<>(true, "작업이 생성되었습니다.", TaskResponse.from(savedTask));
     }
 
     @Transactional
@@ -107,6 +111,8 @@ public class TaskService {
 
         Task savedTask = taskRepository.save(task);
 
+        activityLogSaveUtil.saveActivityTaskCreate(savedTask.getId(), userId, request.getTitle());
+
         return new CommonResponse<>(true, "작업이 수정되었습니다.",TaskResponse.from(savedTask));
     }
 
@@ -120,6 +126,8 @@ public class TaskService {
         }
         taskRepository.deleteById(id);
 
+        activityLogSaveUtil.saveActivityTaskDelete(task.getId(), userId, task.getTitle());
+
         return new CommonResponse<>(true, "작업이 삭제되었습니다.",null);
     }
 
@@ -131,10 +139,16 @@ public class TaskService {
             throw new CustomException(ExceptionCode.NOT_AUTHOR_TASK);
         }
 
-       TaskStatus status = request.getTaskStatus();
+        TaskStatus beforeStatus = task.getStatus();
 
-        task.updateStatus(status);
+        TaskStatus afterStatus = request.getTaskStatus();
+
+        task.updateStatus(afterStatus);
+
         taskRepository.save(task);
+
+        activityLogSaveUtil.saveActivityTaskStatusChange(task.getId(), userId, beforeStatus, afterStatus);
+
         return new CommonResponse<>(true, "작업 상태가 변경되었습니다.",TaskResponse.from(task));
     }
 

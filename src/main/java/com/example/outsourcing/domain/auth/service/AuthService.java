@@ -6,6 +6,7 @@ import com.example.outsourcing.common.exception.CustomException;
 import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.common.util.JwtUtil;
 import com.example.outsourcing.common.util.PasswordEncoder;
+import com.example.outsourcing.domain.activity.util.ActivityLogSaveUtil;
 import com.example.outsourcing.domain.auth.model.request.AuthLoginRequest;
 import com.example.outsourcing.domain.auth.model.request.AuthPasswordCheckRequest;
 import com.example.outsourcing.domain.auth.model.response.AuthPasswordCheckResponse;
@@ -21,6 +22,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+    private final ActivityLogSaveUtil activityLogSaveUtil;
 
     @Transactional
     public CommonResponse<AuthTokenResponse> login(AuthLoginRequest request) {
@@ -34,6 +36,8 @@ public class AuthService {
         String token = jwtUtil.generateToken(user.getId(), user.getUsername(), user.getRole());
 
         AuthTokenResponse response = AuthTokenResponse.from(token);
+
+        activityLogSaveUtil.saveActivityUserLogin(user.getId());
 
         return new CommonResponse<>(true, "로그인 성공", response);
 
