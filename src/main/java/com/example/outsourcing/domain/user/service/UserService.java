@@ -6,6 +6,7 @@ import com.example.outsourcing.common.enums.UserRole;
 import com.example.outsourcing.common.exception.CustomException;
 import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.common.util.PasswordEncoder;
+import com.example.outsourcing.domain.activity.util.ActivityLogSaveUtil;
 import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
 import com.example.outsourcing.domain.user.model.request.UserDeleteRequest;
 import com.example.outsourcing.domain.user.model.request.UserUpdateRequest;
@@ -25,6 +26,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ActivityLogSaveUtil activityLogSaveUtil;
 
     //회원가입
     @Transactional
@@ -97,6 +99,8 @@ public class UserService {
         User user = getUser(userId, id, request.getPassword());
 
         user.softDelete();
+
+        activityLogSaveUtil.saveActivityUserLogout(user);
 
         return new CommonResponse<>(true, "회원 탈퇴가 완료되었습니다.", null);
 

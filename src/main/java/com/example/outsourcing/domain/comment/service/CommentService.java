@@ -6,6 +6,7 @@ import com.example.outsourcing.common.entity.User;
 import com.example.outsourcing.common.enums.ExceptionCode;
 import com.example.outsourcing.common.exception.CustomException;
 import com.example.outsourcing.common.model.CommonResponse;
+import com.example.outsourcing.domain.activity.util.ActivityLogSaveUtil;
 import com.example.outsourcing.domain.comment.model.response.CommentCreateResponse;
 import com.example.outsourcing.domain.comment.model.response.CommentGetResponse;
 import com.example.outsourcing.domain.comment.model.response.CommentUpdateResponse;
@@ -29,6 +30,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
+    private final ActivityLogSaveUtil activityLogSaveUtil;
 
     // 댓글 생성
     @Transactional
@@ -57,6 +59,9 @@ public class CommentService {
         }
 
         Comment commentSave = commentRepository.save(comment);  // 저장하기
+
+        activityLogSaveUtil.saveActivityCommentCreate(commentSave.getTask().getId(), user, commentSave.getTask().getTitle());
+
         CommentCreateResponse response = CommentCreateResponse.fromCreate(commentSave);  // dto 생성
         return new CommonResponse<>(true, "댓글이 작성되었습니다.", response);  // 공통응답객체로 return
     }
@@ -116,6 +121,8 @@ public class CommentService {
         comment.updateComment(content);  // 댓글 내용 수정
         Comment updateComment = commentRepository.save(comment); // 댓글 수정 후 저장
 
+        activityLogSaveUtil.saveActivityCommentUpdate(updateComment.getTask().getId(), user);
+
         CommentUpdateResponse response = CommentUpdateResponse.fromUpdate(updateComment);
         return new CommonResponse<>(true, "댓글이 수정되었습니다.", response);
     }
@@ -141,6 +148,9 @@ public class CommentService {
 
         // 댓글 삭제
         commentRepository.delete(comment);  // 부모 댓글일 경우 자식 자동 삭제됨
+
+        activityLogSaveUtil.saveActivityCommentDelete(comment.getTask().getId(), user);
+
         return new CommonResponse<>(true, "댓글이 삭제되었습니다.", null);
     }
 }
