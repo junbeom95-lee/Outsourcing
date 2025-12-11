@@ -28,4 +28,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
         where t.id = :teamId
     """)
     Optional<Team> findByIdWithUsers(@Param("teamId") Long teamId);
+
+    List<Team> findAllByNameContaining(String query);
 }
