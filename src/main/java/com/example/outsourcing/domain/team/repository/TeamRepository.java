@@ -1,6 +1,7 @@
 package com.example.outsourcing.domain.team.repository;
 
 import com.example.outsourcing.common.entity.Team;
+import com.example.outsourcing.common.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,4 +31,13 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     Optional<Team> findByIdWithUsers(@Param("teamId") Long teamId);
 
     List<Team> findAllByNameContaining(String query);
+
+    // 팀 삭제 시 멤버가 존재하는지
+    @Query("""
+        select u 
+        from User u
+        join fetch User_Team ut on ut.user = u 
+        where ut.team.id = :teamId
+        """)
+    List<User> findAllUserByTeamId(@Param("teamId") Long teamId);
 }
