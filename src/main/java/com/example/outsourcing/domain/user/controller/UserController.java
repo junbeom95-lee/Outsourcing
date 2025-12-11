@@ -1,6 +1,8 @@
 package com.example.outsourcing.domain.user.controller;
 
 import com.example.outsourcing.common.model.CommonResponse;
+import com.example.outsourcing.domain.user.model.request.UserPasswordCheckRequest;
+import com.example.outsourcing.domain.user.model.response.UserPasswordCheckResponse;
 import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
 import com.example.outsourcing.domain.user.model.request.UserDeleteRequest;
 import com.example.outsourcing.domain.user.model.request.UserUpdateRequest;
@@ -85,6 +87,18 @@ public class UserController {
         CommonResponse<List<UserGetAvailableResponse>> response = userService.getAvailable(teamId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //비밀번호 확인
+    @PostMapping("/verify-password")
+    public ResponseEntity<CommonResponse<UserPasswordCheckResponse>> checkingPassword(@AuthenticationPrincipal Long userId,
+                                                                                      @RequestBody @Valid UserPasswordCheckRequest request) {
+
+        CommonResponse<UserPasswordCheckResponse> response = userService.checkPassword(userId, request);
+
+        HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+
+        return ResponseEntity.status(status).body(response);
     }
 
 }

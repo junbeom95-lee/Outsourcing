@@ -7,6 +7,8 @@ import com.example.outsourcing.common.exception.CustomException;
 import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.common.util.PasswordEncoder;
 import com.example.outsourcing.domain.activity.util.ActivityLogSaveUtil;
+import com.example.outsourcing.domain.user.model.request.UserPasswordCheckRequest;
+import com.example.outsourcing.domain.user.model.response.UserPasswordCheckResponse;
 import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
 import com.example.outsourcing.domain.user.model.request.UserDeleteRequest;
 import com.example.outsourcing.domain.user.model.request.UserUpdateRequest;
@@ -129,5 +131,21 @@ public class UserService {
         List<UserGetAvailableResponse> response = userList.stream().map(UserGetAvailableResponse::from).toList();
 
         return new CommonResponse<>(true, "추가 가능한 사용자 목록 조회 성공", response);
+    }
+
+    //비밀번호 확인
+    @Transactional
+    public CommonResponse<UserPasswordCheckResponse> checkPassword(Long userId, UserPasswordCheckRequest request) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new CustomException(ExceptionCode.NOT_FOUND_USER));
+
+        boolean matches = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+        UserPasswordCheckResponse response = UserPasswordCheckResponse.from(matches);
+
+        if (!matches) return new CommonResponse<>(false, "비밀번호가 올바르지 않습니다.", response);
+
+        return new CommonResponse<>(true, "비밀번호가 확인되었습니다.", response);
+
     }
 }
