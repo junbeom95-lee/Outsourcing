@@ -22,4 +22,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
         where ut.id is null
         """)
     List<User> findAllUserByUser_idIsNull(@Param("teamId") Long teamId);
+
+    List<User> findAllByNameContaining(String query);
 }
