@@ -31,7 +31,7 @@ public enum ExceptionCode {
     REQUIRED_COMMENT(HttpStatus.BAD_REQUEST, "댓글 내용은 필수입니다."),
 
     // team
-    TEAM_NOT_FOUND(HttpStatus.NOT_FOUND, "팀을 찾을 수 없습니다."),
+    NOT_FOUND_TEAM(HttpStatus.NOT_FOUND, "팀을 찾을 수 없습니다."),
     BAD_REQUEST_CREATE_TEAM(HttpStatus.NOT_FOUND , "팀 이름은 필수입니다."),
     EXISTS_TEAM_NAME(HttpStatus.NOT_FOUND , "이미 존재하는 팀 이름입니다."),
     FORBIDDEN_CREATE(HttpStatus.FORBIDDEN, "생성 권한이 없습니다."),
@@ -42,6 +42,10 @@ public enum ExceptionCode {
     TEAM_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "이미 팀에 속한 멤버입니다."),
     FORBIDDEN_REMOVE(HttpStatus.NOT_FOUND, "이미 팀에 속한 멤버입니다."),
 
+    //user_team
+    EXISTS_USER_TEAM(HttpStatus.CONFLICT, "이미 팀에 속한 멤버입니다."),
+    FORBIDDEN_DELETE_USER_TEAM(HttpStatus.FORBIDDEN, "제거 권한이 없습니다."),
+    NOT_FOUND_TEAM_MEMBER(HttpStatus.NOT_FOUND, "팀 멤버를 찾을 수 없습니다."),
 
     ;
 
