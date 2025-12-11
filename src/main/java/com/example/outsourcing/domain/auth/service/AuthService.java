@@ -8,8 +8,6 @@ import com.example.outsourcing.common.util.JwtUtil;
 import com.example.outsourcing.common.util.PasswordEncoder;
 import com.example.outsourcing.domain.activity.util.ActivityLogSaveUtil;
 import com.example.outsourcing.domain.auth.model.request.AuthLoginRequest;
-import com.example.outsourcing.domain.auth.model.request.AuthPasswordCheckRequest;
-import com.example.outsourcing.domain.auth.model.response.AuthPasswordCheckResponse;
 import com.example.outsourcing.domain.auth.model.response.AuthTokenResponse;
 import com.example.outsourcing.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +22,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final ActivityLogSaveUtil activityLogSaveUtil;
 
+    //로그인
     @Transactional
     public CommonResponse<AuthTokenResponse> login(AuthLoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow(
@@ -40,21 +39,6 @@ public class AuthService {
         activityLogSaveUtil.saveActivityUserLogin(user);
 
         return new CommonResponse<>(true, "로그인 성공", response);
-
-    }
-
-    @Transactional
-    public CommonResponse<AuthPasswordCheckResponse> checkPassword(Long userId, AuthPasswordCheckRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new CustomException(ExceptionCode.NOT_FOUND_USER));
-
-        boolean matches = passwordEncoder.matches(request.getPassword(), user.getPassword());
-
-        AuthPasswordCheckResponse response = AuthPasswordCheckResponse.from(matches);
-
-        if (!matches) return new CommonResponse<>(false, "비밀번호가 올바르지 않습니다.", response);
-
-        return new CommonResponse<>(true, "비밀번호가 확인되었습니다.", response);
 
     }
 }

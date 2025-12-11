@@ -110,7 +110,10 @@ public class TeamService {
         // 팀 정보 수정
         team.update(request.getName(), request.getDescription());
 
-        TeamUpdateResponse response = TeamUpdateResponse.from(team);
+        List<User> members = teamRepository.findAllUserByTeamId(teamId);
+
+        TeamUpdateResponse response = TeamUpdateResponse.from(team, members);
+
 
         return new CommonResponse<>(true, "팀 정보가 수정되었습니다.", response);
 
@@ -129,6 +132,11 @@ public class TeamService {
         );
 
         // 팀에 멤버가 있는지 확인은 후에 추가
+        List<User> members = teamRepository.findAllUserByTeamId(teamId);
+
+        if (!members.isEmpty()) {
+            throw new CustomException(ExceptionCode.TEAM_HAS_MEMBER);
+        }
 
         // 팀 삭제
         teamRepository.delete(team);
