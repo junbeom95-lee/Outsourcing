@@ -1,6 +1,7 @@
 package com.example.outsourcing.domain.team.model.response;
 
 import com.example.outsourcing.common.entity.Team;
+import com.example.outsourcing.domain.user.model.response.UserGetListResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,7 +17,7 @@ public class TeamCreateResponse {
     private String name;
     private String description;
     private LocalDateTime createdAt;
-    private List<Object> members;
+    private List<UserGetListResponse> members;
 
     public static TeamCreateResponse from(Team team) {
         return new TeamCreateResponse(
