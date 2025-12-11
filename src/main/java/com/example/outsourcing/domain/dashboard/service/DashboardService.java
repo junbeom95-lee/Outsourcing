@@ -1,6 +1,7 @@
 package com.example.outsourcing.domain.dashboard.service;
 
 import com.example.outsourcing.common.entity.Task;
+import com.example.outsourcing.common.entity.Team;
 import com.example.outsourcing.common.entity.User;
 import com.example.outsourcing.common.enums.ExceptionCode;
 import com.example.outsourcing.common.enums.TaskStatus;
@@ -9,11 +10,16 @@ import com.example.outsourcing.common.model.CommonResponse;
 import com.example.outsourcing.domain.dashboard.dto.DashboardMyTaskDto;
 import com.example.outsourcing.domain.dashboard.dto.DashboardStatsResponse;
 import com.example.outsourcing.domain.dashboard.dto.DashboardWeelkyResponse;
+import com.example.outsourcing.domain.task.dto.response.StatusCountDto;
+import com.example.outsourcing.domain.task.dto.response.TaskCountProjection;
+import com.example.outsourcing.domain.task.dto.response.TeamTaskCountDto;
 import com.example.outsourcing.domain.task.repository.TaskRepository;
+import com.example.outsourcing.domain.team.repository.TeamRepository;
 import com.example.outsourcing.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.util.Tuple;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -21,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 @Service
@@ -29,6 +36,7 @@ import java.util.stream.IntStream;
 public class DashboardService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
 
     //totalTasks;        // 전체 작업 수
     //completedTasks;    // 완료된 작업 수 (DONE)
@@ -38,41 +46,94 @@ public class DashboardService {
     //teamProgress;   // 팀 전체 진행률 (%)
     //completionRate; // 나의 완료율 (%)
     public CommonResponse<DashboardStatsResponse> dashboardStats(Long userId) {
+
         User assignee = userRepository.findById(userId).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_USER));
+        Team usersTeam = teamRepository.findByTeamByUserId(userId).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_TEAM));
+
         LocalDateTime now = LocalDateTime.now();
+        //팀 작업량
+        long teamTasks = 0L;
+        long doneTeamTasks = 0L;
+        //팀 총 카운트 db
+        List<TeamTaskCountDto> teamCountList = teamRepository.countTeamTaskGroup(usersTeam.getId());
+        //for문으로 done or not 카운트
+          for (TeamTaskCountDto list : teamCountList) {
+              teamTasks += list.getCount();
 
-        int totalTasks = taskRepository.countAll();
-        int completedTasks = taskRepository.countByTasks(TaskStatus.DONE);
-        int inProgressTasks = taskRepository.countByTasks(TaskStatus.IN_PROGRESS);
-        int todoTasks = taskRepository.countByTasks(TaskStatus.TODO);
-        int overdueTasks = taskRepository.countByOverDueDate(now);
-        double teamProgress = 0;    //전체 팀을 100% 로 두고, 내가 속한 팀이 여기 100%에서 얼만큼인가?
-        double myTotalTask = taskRepository.countByMyTasks(userId);
-        double myDoneTask = taskRepository.countByMyTasksByStatusIdDone(userId,TaskStatus.DONE);
-        int completionRate = 0;
-        if (myTotalTask > 0) {
-            completionRate = (int) (myDoneTask / myTotalTask *100);
+              if (TaskStatus.DONE.equals(list.getStatus())) {
+                  doneTeamTasks = list.getCount();
+              }
+          }
+        //팀 작업량 백분위
+        double teamProgress = Math.round(((float) doneTeamTasks / teamTasks) * 100);
+        //토탈 task
+        Long completedTasks = 0L;
+        Long inProgressTasks = 0L;
+        Long todoTasks = 0L;
+        //토탈 총 카운트 db
+        List<StatusCountDto> countList = taskRepository.countByTasks();
+        //for문으로 todo inprogress done 카운트
+          for (StatusCountDto list : countList) {
+              if (TaskStatus.TODO.equals(list.getStatus())) {
+                  todoTasks = list.getCount();
+              } else if (TaskStatus.IN_PROGRESS.equals(list.getStatus())) {
+                  inProgressTasks = list.getCount();
+              } else {
+                  completedTasks = list.getCount();
+              }
+          }
+        //총 토탈 카운트
+        Long totalTasks = completedTasks + inProgressTasks + todoTasks;
+        //기한지난 작업물 db
+        Long overdueTasks = taskRepository.countByOverDueDate(now);
+
+        //내 작업량
+        double myTotalTask = 0L;
+        double myDoneTask = 0L;
+        //내 작업량 db
+        List<TaskCountProjection> myTaskList = taskRepository.countByMyTasksGrouped(userId);
+        for (TaskCountProjection list : myTaskList) {
+            myTotalTask += list.getCount();
+            if (TaskStatus.DONE.equals(list.getStatus())) {
+                myDoneTask = list.getCount();
+            }
         }
-
-        return new CommonResponse<>(true,"대시보드 통계 조회 성공",
+        double completionRate = 0;
+        //내 작업량 백분위
+        if (myTotalTask > 0) {
+            completionRate = (double) Math.round((myDoneTask / myTotalTask *100));
+        }
+        return new CommonResponse<>(true,
+                "대시보드 통계 조회 성공",
                 new DashboardStatsResponse(totalTasks, completedTasks, inProgressTasks, todoTasks, overdueTasks, teamProgress, completionRate)
         );
     }
 
     public CommonResponse<DashboardMyTaskDto> myTaskSummary(Long userId) {
-        User assignee = userRepository.findById(userId).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_USER));
+        User assignee = userRepository.findById(userId)
+                .orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_USER));
         LocalDateTime now = LocalDateTime.now();
 
         List<Task> todos = taskRepository.findTaskByMyStatus(userId, TaskStatus.TODO);
         List<Task> todayTask = taskRepository.findTaskByMyStatus(userId, TaskStatus.IN_PROGRESS);
         //해야할일. 그니까 듀데이트 남은거
-        List<Task> upcomingTask = todos.stream().filter(t-> t.getDueDate().isAfter(now) || t.getDueDate().isEqual(now)).toList();
+        List<Task> upcomingTask = todos.stream()
+                .filter(t-> t.getDueDate().isAfter(now) || t.getDueDate().isEqual(now))
+                .toList();
         //듀데이트 지난거. 큰일난거.
-        List<Task> overdueTask = todos.stream().filter((task -> task.getDueDate().isBefore(now))).toList();
+        List<Task> overdueTask = todos.stream()
+                .filter((task -> task.getDueDate().isBefore(now)))
+                .toList();
 
-        List<DashboardMyTaskDto.Tasks> todayTasks = todayTask.stream().map(DashboardMyTaskDto.Tasks::new).toList();
-        List<DashboardMyTaskDto.Tasks> upcomingTasks = upcomingTask.stream().map(DashboardMyTaskDto.Tasks::new).toList();
-        List<DashboardMyTaskDto.Tasks> overdueTasks = overdueTask.stream().map(DashboardMyTaskDto.Tasks::new).toList();
+        List<DashboardMyTaskDto.Tasks> todayTasks = todayTask.stream()
+                .map(DashboardMyTaskDto.Tasks::new)
+                .toList();
+        List<DashboardMyTaskDto.Tasks> upcomingTasks = upcomingTask.stream()
+                .map(DashboardMyTaskDto.Tasks::new)
+                .toList();
+        List<DashboardMyTaskDto.Tasks> overdueTasks = overdueTask.stream()
+                .map(DashboardMyTaskDto.Tasks::new)
+                .toList();
 
         return new CommonResponse<>(true,"내 작업 요약 조회 성공",new DashboardMyTaskDto(todayTasks, upcomingTasks, overdueTasks));
     }

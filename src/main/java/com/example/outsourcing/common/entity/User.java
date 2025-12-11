@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -40,6 +42,9 @@ public class User extends BaseEntity {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;//삭제일
+
+    @OneToMany(mappedBy = "assignee")
+    private List<Task> taskList = new ArrayList<>();
 
     public User(String username, String email, String password, String name, UserRole role) {
         this.username = username;
