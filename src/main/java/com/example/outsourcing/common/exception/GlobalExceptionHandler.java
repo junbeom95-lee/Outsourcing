@@ -31,31 +31,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CommonResponse<HashMap<String, String>>> methodArgumentNotValidException(MethodArgumentNotValidException e) {
 
-        HashMap<String, String> message = getErrorMessage(e);
+        String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
 
-        CommonResponse<HashMap<String, String>> response = new CommonResponse<>(false, "올바르지 않은 입력입니다.", message);
+        CommonResponse<HashMap<String, String>> response = new CommonResponse<>(false, message, null);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    }
-
-
-    // Valid 검증 에러들 HashMap<filed, message>으로 생성
-    private HashMap<String, String> getErrorMessage(MethodArgumentNotValidException e) {
-
-        //1. Valid로 검증한 모든 에러들
-        List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
-        HashMap<String, String> map = new HashMap<>();
-
-        //2. 에러들 각각 map에 (key : 필드, value : message) 담기
-        allErrors.forEach(error -> {
-
-            if (error instanceof FieldError fieldError) {
-                String field = fieldError.getField();
-                String message = fieldError.getDefaultMessage();
-
-                map.put(field, message);
-            }
-        });
-        return map;
     }
 }
