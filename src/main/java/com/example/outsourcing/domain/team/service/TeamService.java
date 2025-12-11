@@ -1,19 +1,26 @@
 package com.example.outsourcing.domain.team.service;
 
 import com.example.outsourcing.common.entity.Team;
+import com.example.outsourcing.common.entity.User;
 import com.example.outsourcing.common.enums.ExceptionCode;
 import com.example.outsourcing.common.enums.UserRole;
 import com.example.outsourcing.common.exception.CustomException;
 import com.example.outsourcing.common.model.CommonResponse;
+import com.example.outsourcing.domain.team.model.response.TeamGetDetailResponse;
+import com.example.outsourcing.domain.team.model.response.TeamGetListResponse;
+import com.example.outsourcing.domain.team.model.response.TeamGetMemberResponse;
 import com.example.outsourcing.domain.team.model.request.TeamCreateRequest;
 import com.example.outsourcing.domain.team.model.request.TeamUpdateRequest;
 import com.example.outsourcing.domain.team.model.response.TeamCreateResponse;
 import com.example.outsourcing.domain.team.model.response.TeamUpdateResponse;
 import com.example.outsourcing.domain.team.repository.TeamRepository;
+import com.example.outsourcing.domain.user_team.reposiotry.UserTeamRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -21,6 +28,43 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamService {
 
     private final TeamRepository teamRepository;
+    private final UserTeamRepository userTeamRepository;
+
+    //팀 목록 조회
+    @Transactional(readOnly = true)
+    public CommonResponse<List<TeamGetListResponse>> getTeamList() {
+
+        List<Team> teamList = teamRepository.findAllWithUsers();
+
+        List<TeamGetListResponse> teamGetListResponseList = teamList.stream().map(TeamGetListResponse::from).toList();
+
+        return new CommonResponse<>(true, "팀 목록 조회 성공", teamGetListResponseList);
+    }
+
+    //팀 상세 조회
+    @Transactional(readOnly = true)
+    public CommonResponse<TeamGetDetailResponse> getTeamDetail(Long id) {
+
+        Team team = teamRepository.findByIdWithUsers(id).orElseThrow(
+                () -> new CustomException(ExceptionCode.NOT_FOUND_TEAM));
+
+        TeamGetDetailResponse teamGetDetailResponse = TeamGetDetailResponse.from(team);
+
+        return new CommonResponse<>(true, "팀 조회 성공", teamGetDetailResponse);
+    }
+
+    //팀 멤버 조회
+    @Transactional(readOnly = true)
+    public CommonResponse<List<TeamGetMemberResponse>> getTemMemberList(Long teamId) {
+
+        List<User> userList = userTeamRepository.findUsersByTeamId(teamId);
+
+        List<TeamGetMemberResponse> teamGetMemberListResponse = userList.stream()
+                .map(TeamGetMemberResponse::from)
+                .toList();
+
+        return new CommonResponse<>(true, "팀 멤버 조회 성공", teamGetMemberListResponse);
+    }
 
     // 팀 생성
     @Transactional
@@ -60,7 +104,7 @@ public class TeamService {
 
         // 팀 조회 (없으면 에러)
         Team team = teamRepository.findById(teamId).orElseThrow(
-                () -> new CustomException(ExceptionCode.TEAM_NOT_FOUND)
+                () -> new CustomException(ExceptionCode.NOT_FOUND_TEAM)
         );
 
         // 팀 정보 수정
@@ -81,7 +125,7 @@ public class TeamService {
         if (!UserRole.ADMIN.name().equals(authority)) throw new CustomException(ExceptionCode.FORBIDDEN_DELETE);
 
         Team team = teamRepository.findById(teamId).orElseThrow(
-                () -> new CustomException(ExceptionCode.TEAM_NOT_FOUND)
+                () -> new CustomException(ExceptionCode.NOT_FOUND_TEAM)
         );
 
         // 팀에 멤버가 있는지 확인은 후에 추가
