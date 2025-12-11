@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,13 +69,13 @@ public class CommentService {
 
     // 댓글 조회
     @Transactional(readOnly = true)
-    public CommonResponse<List<CommentGetResponse>> getComments(Long taskId, Integer page, Integer size, String sort) {
+    public CommonResponse<PagedModel<CommentGetResponse>> getComments(Long taskId, Integer page, Integer size, String sort) {
         // 작업을 찾을 수 없는 경우 예외처리
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_TASK));
 
         // 기본 페이지 설정
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").ascending());
 
         // 정렬 조건 설정
         if ("oldest".equals(sort)) {
@@ -87,11 +88,11 @@ public class CommentService {
         Page<Comment> commentPage = commentRepository.findByTask(task, pageable);
 
         // 댓글을 CommentGetResponse로 변환
-        List<CommentGetResponse> commentList = commentPage.getContent().stream()  // 리스트 stream으로 변환 -> 하나씩 처리 가능
-                .map(CommentGetResponse::fromGet)
-                .collect(Collectors.toList());
+        Page<CommentGetResponse> commentGetResponsePage = commentPage.map(CommentGetResponse::fromGet);
 
-        return new CommonResponse<>(true, "댓글 목록을 조회했습니다.", commentList);
+        PagedModel<CommentGetResponse> response = new PagedModel<>(commentGetResponsePage);
+
+        return new CommonResponse<>(true, "댓글 목록을 조회했습니다.", response);
     }
 
 

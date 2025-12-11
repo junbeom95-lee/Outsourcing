@@ -28,7 +28,7 @@ public class ActivityTotalResponse {
                 activity.getUser().getId(),
                 activityUserResponse,
                 activity.getTaskId(),
-                LocalDateTime.now(),
+                activity.getTimestamp(),
                 activity.getDescription()
         );
 

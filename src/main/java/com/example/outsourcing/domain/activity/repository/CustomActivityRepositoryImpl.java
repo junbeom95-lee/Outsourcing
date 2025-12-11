@@ -35,6 +35,7 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository{
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(activity.timestamp.desc())
                 .fetch();
 
         Long activityListCount = jpaQueryFactory.select(activity.count())
