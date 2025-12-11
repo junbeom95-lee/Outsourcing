@@ -1,5 +1,8 @@
 package com.example.outsourcing.common.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum ActivityType {
     TASK_CREATED("작업 생성"),
     TASK_UPDATED("작업 수정"),
