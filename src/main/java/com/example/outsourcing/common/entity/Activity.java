@@ -32,12 +32,13 @@ public class Activity {
     @Column(nullable = false)
     private String description;     //변경 내용
 
-    private LocalDateTime timestamp = LocalDateTime.now();//시간
+    private LocalDateTime timestamp;//시간
 
     public Activity(Long taskId, User user, ActivityType type, String description) {
         this.taskId = taskId;
         this.user = user;
         this.type = type;
         this.description = description;
+        this.timestamp = LocalDateTime.now();
     }
 }
