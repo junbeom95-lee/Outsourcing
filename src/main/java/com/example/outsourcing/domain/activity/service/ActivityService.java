@@ -41,6 +41,6 @@ public class ActivityService {
 
         PagedModel<ActivityMyResponse> pagedModel = new PagedModel<>(activityMyResponse);
 
-        return new CommonResponse<>(true, "활동 로그 조회 성공", pagedModel);
+        return new CommonResponse<>(true, "내 활동 로그 조회 성공", pagedModel);
     }
 }
