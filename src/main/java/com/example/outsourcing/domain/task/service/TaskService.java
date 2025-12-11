@@ -93,7 +93,7 @@ public class TaskService {
         );
         Task savedTask = taskRepository.save(task);
 
-        activityLogSaveUtil.saveActivityTaskCreate(savedTask.getId(), userId, request.getTitle());
+        activityLogSaveUtil.saveActivityTaskCreate(savedTask.getId(), assignee, request.getTitle());
 
         return new CommonResponse<>(true, "작업이 생성되었습니다.", TaskResponse.from(savedTask));
     }
@@ -111,7 +111,7 @@ public class TaskService {
 
         Task savedTask = taskRepository.save(task);
 
-        activityLogSaveUtil.saveActivityTaskCreate(savedTask.getId(), userId, request.getTitle());
+        activityLogSaveUtil.saveActivityTaskUpdate(savedTask.getId(), assignee, request.getTitle());
 
         return new CommonResponse<>(true, "작업이 수정되었습니다.",TaskResponse.from(savedTask));
     }
@@ -126,7 +126,7 @@ public class TaskService {
         }
         taskRepository.deleteById(id);
 
-        activityLogSaveUtil.saveActivityTaskDelete(task.getId(), userId, task.getTitle());
+        activityLogSaveUtil.saveActivityTaskDelete(task.getId(), assignee, task.getTitle());
 
         return new CommonResponse<>(true, "작업이 삭제되었습니다.",null);
     }
@@ -147,7 +147,7 @@ public class TaskService {
 
         taskRepository.save(task);
 
-        activityLogSaveUtil.saveActivityTaskStatusChange(task.getId(), userId, beforeStatus, afterStatus);
+        activityLogSaveUtil.saveActivityTaskStatusChange(task.getId(), assignee, beforeStatus, afterStatus);
 
         return new CommonResponse<>(true, "작업 상태가 변경되었습니다.",TaskResponse.from(task));
     }

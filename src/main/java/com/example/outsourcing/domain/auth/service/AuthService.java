@@ -37,7 +37,7 @@ public class AuthService {
 
         AuthTokenResponse response = AuthTokenResponse.from(token);
 
-        activityLogSaveUtil.saveActivityUserLogin(user.getId());
+        activityLogSaveUtil.saveActivityUserLogin(user);
 
         return new CommonResponse<>(true, "로그인 성공", response);
 
