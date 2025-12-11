@@ -18,7 +18,8 @@ import java.util.List;
 public class Comment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;   // 댓글 id
+    @Column(name = "comment_id")
+    private Long id;   // 댓글 id
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -32,7 +33,7 @@ public class Comment extends BaseEntity {
     private String content;  // 댓글 내용
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id", referencedColumnName = "commentId")
+    @JoinColumn(name = "parent_id")
     public Comment parentComment;  // 부모 댓글 (자기자신 참조)
 
     @OneToMany(mappedBy = "parentComment", orphanRemoval = true) // 부모 댓글 삭제시 자동 삭제됨

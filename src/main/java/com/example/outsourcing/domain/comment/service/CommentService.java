@@ -74,7 +74,7 @@ public class CommentService {
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_TASK));
 
         // 기본 페이지 설정
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").ascending());
 
         // 정렬 조건 설정
         if ("oldest".equals(sort)) {
