@@ -135,9 +135,6 @@ public class TaskService {
     public CommonResponse<TaskResponse> changeTaskStatus(Long userId, Long id, TaskStatusChangeRequest request) {
         User assignee = userRepository.findById(userId).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_USER));
         Task task = taskRepository.findById(id).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_TASK));
-        if (!assignee.getId().equals(task.getAssignee().getId())) {
-            throw new CustomException(ExceptionCode.NOT_AUTHOR_TASK);
-        }
 
         TaskStatus beforeStatus = task.getStatus();
 
