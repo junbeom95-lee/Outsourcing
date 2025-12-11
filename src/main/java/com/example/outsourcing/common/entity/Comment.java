@@ -36,7 +36,7 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "parent_id")
     public Comment parentComment;  // 부모 댓글 (자기자신 참조)
 
-    @OneToMany(mappedBy = "parentComment", orphanRemoval = true) // 부모 댓글 삭제시 자동 삭제됨
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true) // 부모 댓글 삭제시 자동 삭제됨
     private List<Comment> childComment = new ArrayList<>();  // 자식 댓글 (대댓글)
 
     public Comment(User user, Task task, String content) {

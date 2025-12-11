@@ -2,6 +2,7 @@ package com.example.outsourcing.domain.comment.model.response;
 
 import com.example.outsourcing.common.entity.Comment;
 import com.example.outsourcing.common.entity.User;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,6 +16,7 @@ public class CommentCreateResponse {
     private final Long userId;
     private final CommentCreateUserResponse user;
     private final String content;
+    @JsonInclude(JsonInclude.Include.NON_NULL)  // parentId가 null이 아닌 경우에만 출력
     private final Long parentId;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
