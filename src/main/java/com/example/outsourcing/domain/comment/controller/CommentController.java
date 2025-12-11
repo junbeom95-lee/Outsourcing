@@ -9,6 +9,8 @@ import com.example.outsourcing.domain.comment.model.response.CommentUpdateRespon
 import com.example.outsourcing.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,13 +37,13 @@ public class CommentController {
 
     // 댓글 조회
     @GetMapping("/{taskId}/comments")
-    public ResponseEntity<CommonResponse<List<CommentGetResponse>>> getComments(
+    public ResponseEntity<CommonResponse<PagedModel<CommentGetResponse>>> getComments(
             @PathVariable Long taskId,
             @RequestParam(defaultValue = "0") Integer page,  // 페이지 0
             @RequestParam(defaultValue = "10") Integer size,  // 페이지 크기 10
             @RequestParam(defaultValue = "newest") String sort  // 기본값 최신순
     ) {
-        CommonResponse<List<CommentGetResponse>> response = commentService.getComments(taskId, page, size, sort);
+        CommonResponse<PagedModel<CommentGetResponse>> response = commentService.getComments(taskId, page, size, sort);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
