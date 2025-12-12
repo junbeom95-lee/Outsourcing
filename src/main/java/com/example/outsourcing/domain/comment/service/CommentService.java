@@ -82,7 +82,7 @@ public class CommentService {
         }
 
         // 댓글 조회
-        Page<Comment> commentPage = commentRepository.findByTask(task, pageable);
+        Page<Comment> commentPage = commentRepository.findCommentsByTaskWithParentComment(task, pageable);
 
         // 댓글을 CommentGetResponse로 변환
         Page<CommentGetResponse> commentGetResponsePage = commentPage.map(CommentGetResponse::fromGet);
