@@ -46,6 +46,7 @@ public enum ExceptionCode {
     EXISTS_USER_TEAM(HttpStatus.CONFLICT, "이미 팀에 속한 멤버입니다."),
     FORBIDDEN_DELETE_USER_TEAM(HttpStatus.FORBIDDEN, "제거 권한이 없습니다."),
     NOT_FOUND_TEAM_MEMBER(HttpStatus.NOT_FOUND, "팀 멤버를 찾을 수 없습니다."),
+    NOT_FOUND_USER_TEAM(HttpStatus.NOT_FOUND, "팀 멤버가 아닙니다.")
 
     ;
 

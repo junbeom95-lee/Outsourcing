@@ -55,15 +55,16 @@ public class UserTeamService {
 
         if(!UserRole.ADMIN.name().equals(authority)) throw new CustomException(ExceptionCode.FORBIDDEN_DELETE_USER_TEAM);
 
-        User user = userRepository.findById(userId ).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new CustomException(ExceptionCode.NOT_FOUND_TEAM_MEMBER));
 
         Team team = teamRepository.findById(teamId).orElseThrow(
                 () -> new CustomException(ExceptionCode.NOT_FOUND_TEAM));
 
-        User_Team user_team = new User_Team(user, team);
+        User_Team savedUserTeam = userTeamRepository.findByUserAndTeam(user, team).orElseThrow(
+                () -> new CustomException(ExceptionCode.NOT_FOUND_USER_TEAM));
 
-        userTeamRepository.delete(user_team);
+        userTeamRepository.delete(savedUserTeam);
 
         return new CommonResponse<>(true, "팀 멤버가 제거되었습니다.", null);
     }
