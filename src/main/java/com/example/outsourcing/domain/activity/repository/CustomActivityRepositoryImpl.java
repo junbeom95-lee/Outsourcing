@@ -25,12 +25,17 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository{
 
         Sort sort = Sort.by("timestamp").descending();
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+        LocalDateTime start = null;
+        LocalDateTime end = null;
+        if (request.getStartDate() != null) start = request.getStartDate().atStartOfDay();
+        if (request.getEndDate() != null) end = request.getEndDate().plusDays(1).atStartOfDay();
+
 
         List<Activity> activityList = jpaQueryFactory.selectFrom(activity)
                 .where(
                         typeEq(request.getType()),
                         taskIdEq(request.getTaskId()),
-                        dateEq(request.getStartDate(), request.getEndDate()),
+                        dateEq(start, end),
                         userIdEq(userId)
                 )
                 .offset(pageable.getOffset())
@@ -43,7 +48,7 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository{
                 .where(
                         typeEq(request.getType()),
                         taskIdEq(request.getTaskId()),
-                        dateEq(request.getStartDate(), request.getEndDate())
+                        dateEq(start, end)
                 )
                 .fetchOne();
 
