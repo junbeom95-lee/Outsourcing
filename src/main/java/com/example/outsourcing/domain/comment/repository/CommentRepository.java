@@ -17,7 +17,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
         COALESCE(c.parentComment.id, c.id) asc,
         c.id asc
     """)
-    Page<Comment> findCommentsByTaskWithParentCommentAsc(Task task, Pageable pageable);
+    Page<Comment> findCommentsByTaskWithParentCommentAsc(Task task, Pageable pageable);  // 오래된 순 정렬
 
     @Query("""
     SELECT c 
@@ -27,6 +27,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
         COALESCE(c.parentComment.id, c.id) DESC, 
         c.id asc
     """)
-    Page<Comment> findCommentsByTaskWithParentCommentDesc(Task task, Pageable pageable);
+    Page<Comment> findCommentsByTaskWithParentCommentDesc(Task task, Pageable pageable);  // 최신순 정렬
 }
 
