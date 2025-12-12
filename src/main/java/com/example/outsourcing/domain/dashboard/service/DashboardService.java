@@ -19,16 +19,14 @@ import com.example.outsourcing.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.util.Tuple;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.List;
-import java.util.Map;
-import java.util.stream.IntStream;
+
 
 @Service
 @RequiredArgsConstructor
@@ -38,32 +36,28 @@ public class DashboardService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
 
-    //totalTasks;        // 전체 작업 수
-    //completedTasks;    // 완료된 작업 수 (DONE)
-    //inProgressTasks;   // 진행 중 작업 수 (IN_PROGRESS)
-    // todoTasks;         // 할 일 작업 수 (TODO)
-    // overdueTasks;      // 마감 기한 지난 작업 수
-    //teamProgress;   // 팀 전체 진행률 (%)
-    //completionRate; // 나의 완료율 (%)
     public CommonResponse<DashboardStatsResponse> dashboardStats(Long userId) {
-
+        //existBy~로 수정하기
         User assignee = userRepository.findById(userId).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_USER));
-        Team usersTeam = teamRepository.findByTeamByUserId(userId).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_TEAM));
-
+        //12.12 긴급 수정 => team 은 null 일수도 있음 이경우엔 팀 작업량 무조건 0이 되도록 예외처리가 아닌 null 처리
+        Team usersTeam = teamRepository.findByTeamByUserId(userId).orElse(null);
         LocalDateTime now = LocalDateTime.now();
-        //팀 작업량
+        //팀 작업량 / 12.12 수정 팀이 null일 경우 무조건 0
         long teamTasks = 0L;
         long doneTeamTasks = 0L;
         //팀 총 카운트 db
-        List<TeamTaskCountDto> teamCountList = teamRepository.countTeamTaskGroup(usersTeam.getId());
-        //for문으로 done or not 카운트
-          for (TeamTaskCountDto list : teamCountList) {
-              teamTasks += list.getCount();
+        //12.12 수정 사항 /팀이 !null 일 경우에만 계산진행
+        if (usersTeam != null) {
+            List<TeamTaskCountDto> teamCountList = teamRepository.countTeamTaskGroup(usersTeam.getId());
+            //for문으로 done or not 카운트
+            for (TeamTaskCountDto list : teamCountList) {
+                teamTasks += list.getCount();
 
-              if (TaskStatus.DONE.equals(list.getStatus())) {
-                  doneTeamTasks = list.getCount();
-              }
-          }
+                if (TaskStatus.DONE.equals(list.getStatus())) {
+                    doneTeamTasks = list.getCount();
+                }
+            }
+        }
         //팀 작업량 백분위
         double teamProgress = Math.round(((float) doneTeamTasks / teamTasks) * 100);
         //토탈 task
@@ -134,8 +128,10 @@ public class DashboardService {
         List<DashboardMyTaskDto.Tasks> overdueTasks = overdueTask.stream()
                 .map(DashboardMyTaskDto.Tasks::new)
                 .toList();
+        DashboardMyTaskDto response = new DashboardMyTaskDto(todayTasks, upcomingTasks, overdueTasks);
+        log.info("response:{}",response.getTodayTasks().toString());
+        return new CommonResponse<>(true,"내 작업 요약 조회 성공",response);
 
-        return new CommonResponse<>(true,"내 작업 요약 조회 성공",new DashboardMyTaskDto(todayTasks, upcomingTasks, overdueTasks));
     }
 
     public CommonResponse<List<DashboardWeelkyResponse>> weeklyTrend(Long userId) {

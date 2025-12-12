@@ -1,8 +1,6 @@
 package com.example.outsourcing.domain.task.dto.request;
-
 import com.example.outsourcing.common.enums.ExceptionCode;
 import com.example.outsourcing.common.enums.TaskPriority;
-import com.example.outsourcing.common.enums.TaskStatus;
 import com.example.outsourcing.common.exception.CustomException;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
