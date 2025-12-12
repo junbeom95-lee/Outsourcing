@@ -74,15 +74,16 @@ public class CommentService {
         // 기본 페이지 설정
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").ascending());
 
+        Page<Comment> commentPage = null;
+
         // 정렬 조건 설정
         if ("oldest".equals(sort)) {
             pageable = PageRequest.of(page, size, Sort.by("createdAt").ascending());  // 오래된 순 정렬
+            commentPage = commentRepository.findCommentsByTaskWithParentCommentAsc(task, pageable);
         } else if("newest".equals(sort)){
             pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());  // 최신순 정렬
+            commentPage = commentRepository.findCommentsByTaskWithParentCommentDesc(task, pageable);
         }
-
-        // 댓글 조회
-        Page<Comment> commentPage = commentRepository.findCommentsByTaskWithParentComment(task, pageable);
 
         // 댓글을 CommentGetResponse로 변환
         Page<CommentGetResponse> commentGetResponsePage = commentPage.map(CommentGetResponse::fromGet);

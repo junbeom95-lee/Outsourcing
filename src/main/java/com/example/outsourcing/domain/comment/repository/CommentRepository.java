@@ -9,8 +9,15 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    // 작업을 기준으로 조회
-//    Page<Comment> findByTask(Task task, Pageable pageable);
+    @Query("""
+    SELECT c 
+    FROM Comment c
+    WHERE c.task = :task
+    ORDER BY 
+        COALESCE(c.parentComment.id, c.id) asc,
+        c.id asc
+    """)
+    Page<Comment> findCommentsByTaskWithParentCommentAsc(Task task, Pageable pageable);
 
     @Query("""
     SELECT c 
@@ -18,8 +25,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     WHERE c.task = :task
     ORDER BY 
         COALESCE(c.parentComment.id, c.id) DESC, 
-        c.createdAt ASC                      
+        c.id asc
     """)
-    Page<Comment> findCommentsByTaskWithParentComment(Task task, Pageable pageable);
+    Page<Comment> findCommentsByTaskWithParentCommentDesc(Task task, Pageable pageable);
 }
 
