@@ -80,8 +80,8 @@ public class TaskService {
         if (request.getTitle() == null || request.getDescription() == null) {
             throw new CustomException(ExceptionCode.BAD_REQUEST_CREATE_TASK);
         }
-
-        User assignee = userRepository.findById(userId).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_USER));
+        //담당자 != 작성자 수정중
+        User assignee = userRepository.findById(request.getAssigneeId()).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_USER));
 
         Task task = new Task(
                 assignee,

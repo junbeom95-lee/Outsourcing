@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.logging.Level;
 
 @Getter
 @Entity
@@ -18,11 +17,12 @@ import java.util.logging.Level;
 public class Task extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name= "task_id")
     private Long id;
     @ManyToOne
     @JoinColumn(name="user_id",nullable = false)
     private User assignee;
-    @Column(name = "title",nullable = false, length = 255)
+    @Column(name = "title",nullable = false)
     private String title;
     @Column(name="description", columnDefinition = "TEXT",nullable = false)
     private String description;
