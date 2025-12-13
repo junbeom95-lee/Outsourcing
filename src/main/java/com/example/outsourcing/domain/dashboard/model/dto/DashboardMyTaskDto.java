@@ -1,4 +1,4 @@
-package com.example.outsourcing.domain.dashboard.dto;
+package com.example.outsourcing.domain.dashboard.model.dto;
 
 import com.example.outsourcing.common.entity.Task;
 import com.example.outsourcing.common.enums.TaskPriority;
