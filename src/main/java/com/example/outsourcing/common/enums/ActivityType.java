@@ -11,8 +11,7 @@ public enum ActivityType {
     COMMENT_CREATED("댓글 작성"),
     COMMENT_UPDATED("댓글 수정"),
     COMMENT_DELETED("댓글 삭제"),
-    LOGIN("로그인"),
-    LOGOUT("로그아웃")
+
     ;
 
     private final String action;
