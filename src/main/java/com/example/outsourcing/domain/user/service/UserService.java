@@ -14,7 +14,6 @@ import com.example.outsourcing.domain.user.model.request.UserDeleteRequest;
 import com.example.outsourcing.domain.user.model.request.UserUpdateRequest;
 import com.example.outsourcing.domain.user.model.response.*;
 import com.example.outsourcing.domain.user.repository.UserRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,13 +77,17 @@ public class UserService {
 
     //사용자 정보 수정
     @Transactional
-    public CommonResponse<UserUpdateResponse> update(Long userId, Long id, @Valid UserUpdateRequest request) {
-
-        boolean exitsEmail = userRepository.existsByEmail(request.getEmail());
-
-        if (exitsEmail) throw new CustomException(ExceptionCode.EXISTS_EMAIL);
+    public CommonResponse<UserUpdateResponse> update(Long userId, Long id, UserUpdateRequest request) {
 
         User user = getUser(userId, id, request.getPassword());
+
+        if (!user.getEmail().equals(request.getEmail())) {
+
+            boolean exitsEmail = userRepository.existsByEmail(request.getEmail());
+
+            if (exitsEmail) throw new CustomException(ExceptionCode.EXISTS_EMAIL);
+
+        }
 
         user.update(request);
 
@@ -136,6 +139,7 @@ public class UserService {
     //비밀번호 확인
     @Transactional
     public CommonResponse<UserPasswordCheckResponse> checkPassword(Long userId, UserPasswordCheckRequest request) {
+
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new CustomException(ExceptionCode.NOT_FOUND_USER));
 
