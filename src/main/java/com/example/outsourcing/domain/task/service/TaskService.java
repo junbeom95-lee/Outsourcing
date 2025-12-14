@@ -14,7 +14,6 @@ import com.example.outsourcing.domain.task.dto.response.TaskResponse;
 import com.example.outsourcing.domain.task.repository.TaskRepository;
 import com.example.outsourcing.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,12 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class TaskService {
+
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final ActivityLogSaveUtil activityLogSaveUtil;
 
+    //작업 목록 조회 (페이징, 필터링)
     @Transactional(readOnly = true)
     public CommonResponse<Page<TaskResponse>> getTasks(Pageable pageable, TaskStatus status, String search, Long assigneeId) {
         Page<Task> tasks;
@@ -65,6 +65,7 @@ public class TaskService {
 
     }
 
+    //작업 상세 조회
     @Transactional(readOnly = true)
     public CommonResponse<TaskResponse> getTaskSingle(Long id) {
 
@@ -73,6 +74,7 @@ public class TaskService {
         return new CommonResponse<>(true, "작업 조회 성공",TaskResponse.fromDetail(content));
     }
 
+    //작업 생성
     @Transactional
     public CommonResponse<TaskResponse> createTask(Long userId, TaskCreateRequest request) {
         //베어럴 토큰 정보 필요함
@@ -98,6 +100,7 @@ public class TaskService {
         return new CommonResponse<>(true, "작업이 생성되었습니다.", TaskResponse.from(savedTask));
     }
 
+    //작업 수정
     @Transactional
     public CommonResponse<TaskResponse> updateTask(Long userId, Long id, TaskUpdateRequest request) {
         //id 검증 로직
@@ -116,6 +119,7 @@ public class TaskService {
         return new CommonResponse<>(true, "작업이 수정되었습니다.",TaskResponse.from(savedTask));
     }
 
+    //작업 삭제
     @Transactional
     public CommonResponse<Void> deleteTask(Long userId, Long id) {
         //id 검증 로직
@@ -131,6 +135,7 @@ public class TaskService {
         return new CommonResponse<>(true, "작업이 삭제되었습니다.",null);
     }
 
+    //작업 상태 변경
     @Transactional
     public CommonResponse<TaskResponse> changeTaskStatus(Long userId, Long id, TaskStatusChangeRequest request) {
         User assignee = userRepository.findById(userId).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_USER));
@@ -148,5 +153,4 @@ public class TaskService {
 
         return new CommonResponse<>(true, "작업 상태가 변경되었습니다.",TaskResponse.from(task));
     }
-
 }
