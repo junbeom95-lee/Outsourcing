@@ -2,7 +2,6 @@ package com.example.outsourcing.domain.team.service;
 
 import com.example.outsourcing.common.entity.Team;
 import com.example.outsourcing.common.entity.User;
-import com.example.outsourcing.common.entity.User_Team;
 import com.example.outsourcing.common.enums.UserRole;
 import com.example.outsourcing.common.exception.CustomException;
 import com.example.outsourcing.common.model.CommonResponse;
@@ -104,24 +103,12 @@ class TeamServiceTest {
         when(teamRepository.save(any(Team.class))).thenReturn(testTeam);
 
         // when
-        CommonResponse<TeamCreateResponse> response = teamService.create(adminRole, request);
+        CommonResponse<TeamCreateResponse> response = teamService.create(request);
 
         // then
         assertTrue(response.isSuccess());
         assertEquals(testTeamName, response.getData().getName());
         verify(teamRepository, times(1)).save(any(Team.class));
-    }
-
-    @Test
-    @DisplayName("팀 생성 실패 - 일반유저 - 권한 x")
-    void crete_Team_fail_noPermission() {
-
-        // given
-        TeamCreateRequest request = new TeamCreateRequest(testTeamName, testDescription);
-
-        // when & then
-        assertThrows(CustomException.class,
-                () -> teamService.create(userRole, request));
     }
 
     @Test
@@ -135,7 +122,7 @@ class TeamServiceTest {
 
         // when & then
         assertThrows(CustomException.class,
-                () -> teamService.create(adminRole, request));
+                () -> teamService.create(request));
     }
 
 
@@ -155,7 +142,7 @@ class TeamServiceTest {
         when(teamRepository.findAllUserByTeamId(any())).thenReturn(List.of(adminUser));
 
         // when
-        CommonResponse<TeamUpdateResponse> response = teamService.update(adminRole, 1L, request);
+        CommonResponse<TeamUpdateResponse> response = teamService.update(1L, request);
 
         // then
         assertTrue(response.isSuccess());
@@ -173,7 +160,7 @@ class TeamServiceTest {
 
         // when & then
         assertThrows(CustomException.class,
-                () -> teamService.update(adminRole, 1L, request));
+                () -> teamService.update(1L, request));
     }
 
 
@@ -186,7 +173,7 @@ class TeamServiceTest {
         when(teamRepository.findById(1L)).thenReturn(Optional.of(testTeam));
 
         // when
-        CommonResponse<Void> response = teamService.delete(adminRole, 1L);
+        CommonResponse<Void> response = teamService.delete(1L);
 
         // then
         assertTrue(response.isSuccess());
@@ -203,7 +190,7 @@ class TeamServiceTest {
 
         // when
         assertThrows(CustomException.class,
-                () -> teamService.delete(userRole, 1L));
+                () -> teamService.delete(1L));
     }
 
     @Test
@@ -216,7 +203,7 @@ class TeamServiceTest {
 
         // when
         assertThrows(CustomException.class,
-                () -> teamService.delete(adminRole, 1L));
+                () -> teamService.delete(1L));
     }
 
     @Test
@@ -228,7 +215,7 @@ class TeamServiceTest {
 
         // when & then
         assertThrows(CustomException.class,
-                () -> teamService.delete(adminRole, 1L));
+                () -> teamService.delete(1L));
     }
 
 

@@ -2,6 +2,7 @@ package com.example.outsourcing.domain.task.controller;
 
 import com.example.outsourcing.common.enums.TaskStatus;
 import com.example.outsourcing.common.model.CommonResponse;
+import com.example.outsourcing.domain.auth.model.dto.UserinfoDetails;
 import com.example.outsourcing.domain.task.dto.request.TaskCreateRequest;
 import com.example.outsourcing.domain.task.dto.request.TaskStatusChangeRequest;
 import com.example.outsourcing.domain.task.dto.request.TaskUpdateRequest;
@@ -40,23 +41,23 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTaskSingle(id));
     }
     @PostMapping
-    public ResponseEntity<CommonResponse<TaskResponse>> createTask(@AuthenticationPrincipal Long userId, @Valid @RequestBody TaskCreateRequest request) {
-        return ResponseEntity.ok(taskService.createTask(userId, request));
+    public ResponseEntity<CommonResponse<TaskResponse>> createTask(@AuthenticationPrincipal UserinfoDetails userDetails, @Valid @RequestBody TaskCreateRequest request) {
+        return ResponseEntity.ok(taskService.createTask(userDetails.getUserId(), request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<TaskResponse>> updateTask(@AuthenticationPrincipal Long userId,@PathVariable Long id, @Valid @RequestBody TaskUpdateRequest request) {
-        return ResponseEntity.ok(taskService.updateTask(userId, id, request));
+    public ResponseEntity<CommonResponse<TaskResponse>> updateTask(@AuthenticationPrincipal UserinfoDetails userDetails,@PathVariable Long id, @Valid @RequestBody TaskUpdateRequest request) {
+        return ResponseEntity.ok(taskService.updateTask(userDetails.getUserId(), id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse<Void>> deleteTask(@AuthenticationPrincipal Long userId, @PathVariable Long id) {
-        return ResponseEntity.ok(taskService.deleteTask(userId, id));
+    public ResponseEntity<CommonResponse<Void>> deleteTask(@AuthenticationPrincipal UserinfoDetails userDetails, @PathVariable Long id) {
+        return ResponseEntity.ok(taskService.deleteTask(userDetails.getUserId(), id));
     }
 
     @PatchMapping("{id}/status")
-    public ResponseEntity<CommonResponse<TaskResponse>> changeTaskStatus(@AuthenticationPrincipal Long userId, @PathVariable Long id, @Valid @RequestBody TaskStatusChangeRequest request) {
-        return ResponseEntity.ok(taskService.changeTaskStatus(userId, id, request));
+    public ResponseEntity<CommonResponse<TaskResponse>> changeTaskStatus(@AuthenticationPrincipal UserinfoDetails userDetails, @PathVariable Long id, @Valid @RequestBody TaskStatusChangeRequest request) {
+        return ResponseEntity.ok(taskService.changeTaskStatus(userDetails.getUserId(), id, request));
     }
 }
 

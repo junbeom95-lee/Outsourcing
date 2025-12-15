@@ -1,6 +1,7 @@
 package com.example.outsourcing.domain.user.controller;
 
 import com.example.outsourcing.common.model.CommonResponse;
+import com.example.outsourcing.domain.auth.model.dto.UserinfoDetails;
 import com.example.outsourcing.domain.user.model.request.UserPasswordCheckRequest;
 import com.example.outsourcing.domain.user.model.response.UserPasswordCheckResponse;
 import com.example.outsourcing.domain.user.model.request.UserCreateRequest;
@@ -40,7 +41,7 @@ public class UserController {
 
     //사용자 정보 조회 (단건)
     @GetMapping("/{id}")
-    public ResponseEntity<CommonResponse<UserGetOneResponse>> getOne( @PathVariable Long id) {
+    public ResponseEntity<CommonResponse<UserGetOneResponse>> getOne(@PathVariable Long id) {
 
         CommonResponse<UserGetOneResponse> response = userService.getOne(id);
 
@@ -60,22 +61,22 @@ public class UserController {
 
     //사용자 정보 수정
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<UserUpdateResponse>> update(@AuthenticationPrincipal Long userId,
+    public ResponseEntity<CommonResponse<UserUpdateResponse>> update(@AuthenticationPrincipal UserinfoDetails userDetails,
                                                                      @PathVariable Long id,
                                                                      @RequestBody @Valid UserUpdateRequest request) {
 
-        CommonResponse<UserUpdateResponse> response = userService.update(userId, id, request);
+        CommonResponse<UserUpdateResponse> response = userService.update(userDetails.getUserId(), id, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     //회원 탈퇴
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse<Void>> delete(@AuthenticationPrincipal Long userId,
+    public ResponseEntity<CommonResponse<Void>> delete(@AuthenticationPrincipal UserinfoDetails userDetails,
                                                        @PathVariable Long id,
                                                        @RequestBody @Valid UserDeleteRequest request) {
 
-        CommonResponse<Void> response = userService.delete(userId, id, request);
+        CommonResponse<Void> response = userService.delete(userDetails.getUserId(), id, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -91,10 +92,10 @@ public class UserController {
 
     //비밀번호 확인
     @PostMapping("/verify-password")
-    public ResponseEntity<CommonResponse<UserPasswordCheckResponse>> checkingPassword(@AuthenticationPrincipal Long userId,
+    public ResponseEntity<CommonResponse<UserPasswordCheckResponse>> checkingPassword(@AuthenticationPrincipal UserinfoDetails userDetails,
                                                                                       @RequestBody @Valid UserPasswordCheckRequest request) {
 
-        CommonResponse<UserPasswordCheckResponse> response = userService.checkPassword(userId, request);
+        CommonResponse<UserPasswordCheckResponse> response = userService.checkPassword(userDetails.getUserId(), request);
 
         HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
 

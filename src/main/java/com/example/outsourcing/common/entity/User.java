@@ -59,6 +59,12 @@ public class User extends BaseEntity {
         this.email = request.getEmail() == null ? this.email : request.getEmail();
     }
 
+    public User(Long userId, String username, UserRole role) {
+        this.id = userId;
+        this.username = username;
+        this.role = role;
+    }
+
     public void softDelete() {
         this.deletedAt = LocalDateTime.now();
     }

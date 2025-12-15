@@ -26,9 +26,7 @@ public class UserTeamService {
 
     //팀 멤버 추가
     @Transactional
-    public CommonResponse<TeamAddMemberResponse> addMember(String authority, Long teamId, TeamAddMemberRequest request) {
-
-        if(!UserRole.ADMIN.name().equals(authority)) throw new CustomException(ExceptionCode.FORBIDDEN);
+    public CommonResponse<TeamAddMemberResponse> addMember(Long teamId, TeamAddMemberRequest request) {
 
         User user = userRepository.findById(request.getUserId()).orElseThrow(
                 () -> new CustomException(ExceptionCode.NOT_FOUND_USER));
@@ -51,9 +49,7 @@ public class UserTeamService {
 
     //팀 멤버 제거
     @Transactional
-    public CommonResponse<Void> deleteMember(String authority, Long teamId, Long userId) {
-
-        if(!UserRole.ADMIN.name().equals(authority)) throw new CustomException(ExceptionCode.FORBIDDEN_DELETE_USER_TEAM);
+    public CommonResponse<Void> deleteMember(Long teamId, Long userId) {
 
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new CustomException(ExceptionCode.NOT_FOUND_TEAM_MEMBER));
