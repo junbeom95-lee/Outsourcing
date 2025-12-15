@@ -1,6 +1,7 @@
 package com.example.outsourcing.domain.comment.controller;
 
 import com.example.outsourcing.common.model.CommonResponse;
+import com.example.outsourcing.domain.auth.model.dto.UserinfoDetails;
 import com.example.outsourcing.domain.comment.model.request.CommentCreateRequest;
 import com.example.outsourcing.domain.comment.model.request.CommentUpdateRequest;
 import com.example.outsourcing.domain.comment.model.response.CommentCreateResponse;
@@ -9,14 +10,12 @@ import com.example.outsourcing.domain.comment.model.response.CommentUpdateRespon
 import com.example.outsourcing.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,9 +28,9 @@ public class CommentController {
     @PostMapping("/{taskId}/comments")
     public ResponseEntity<CommonResponse<CommentCreateResponse>> createComment(
             @PathVariable Long taskId,
-            @AuthenticationPrincipal Long user,
+            @AuthenticationPrincipal UserinfoDetails userDetails,
             @RequestBody CommentCreateRequest request) {
-        CommonResponse<CommentCreateResponse> response = commentService.createComment(user, taskId, request.getContent(), request.getParentId());
+        CommonResponse<CommentCreateResponse> response = commentService.createComment(userDetails.getUserId(), taskId, request.getContent(), request.getParentId());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -52,9 +51,9 @@ public class CommentController {
     public ResponseEntity<CommonResponse<CommentUpdateResponse>> commentUpdate(
             @PathVariable Long taskId,
             @PathVariable Long commentId,
-            @AuthenticationPrincipal Long user,
+            @AuthenticationPrincipal UserinfoDetails userDetails,
             @RequestBody CommentUpdateRequest request) {
-        CommonResponse<CommentUpdateResponse> response = commentService.updateComment(user, commentId, taskId, request.getContent());
+        CommonResponse<CommentUpdateResponse> response = commentService.updateComment(userDetails.getUserId(), commentId, taskId, request.getContent());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -63,8 +62,8 @@ public class CommentController {
     public ResponseEntity<CommonResponse<Void>> commentDelete(
             @PathVariable Long taskId,
             @PathVariable Long commentId,
-            @AuthenticationPrincipal Long user) {
-        CommonResponse<Void> response = commentService.deleteComment(user, commentId, taskId);
+            @AuthenticationPrincipal UserinfoDetails userDetails) {
+        CommonResponse<Void> response = commentService.deleteComment(userDetails.getUserId(), commentId, taskId);
         return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 }

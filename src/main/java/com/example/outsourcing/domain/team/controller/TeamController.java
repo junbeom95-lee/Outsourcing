@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,36 +55,29 @@ public class TeamController {
     }
 
     // 팀 생성
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<CommonResponse<TeamCreateResponse>> create(Authentication authentication,
-                                                                     @RequestBody @Valid TeamCreateRequest request) {
+    public ResponseEntity<CommonResponse<TeamCreateResponse>> create(@RequestBody @Valid TeamCreateRequest request) {
 
-        String authority = authentication.getAuthorities().stream().findFirst().get().getAuthority();
-
-        CommonResponse<TeamCreateResponse> response = teamService.create(authority, request);
+        CommonResponse<TeamCreateResponse> response = teamService.create(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // 팀 수정
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<CommonResponse<TeamUpdateResponse>> update(Authentication authentication,
-                                                                     @PathVariable Long id,
+    public ResponseEntity<CommonResponse<TeamUpdateResponse>> update(@PathVariable Long id,
                                                                      @RequestBody @Valid TeamUpdateRequest request) {
 
-        String authority = authentication.getAuthorities().stream().findFirst().get().getAuthority();
-
-        return ResponseEntity.ok(teamService.update(authority, id, request));  // 뭔가 생각나면 그때 수정
+        return ResponseEntity.ok(teamService.update( id, request));  // 뭔가 생각나면 그때 수정
     }
 
     // 팀 삭제
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommonResponse<Void>> delete(Authentication authentication,
-                                                       @PathVariable Long id) {
+    public ResponseEntity<CommonResponse<Void>> delete(@PathVariable Long id) {
 
-        String authority = authentication.getAuthorities().stream().findFirst().get().getAuthority();
-
-        return ResponseEntity.ok(teamService.delete(authority, id));
+        return ResponseEntity.ok(teamService.delete(id));
     }
-
 }

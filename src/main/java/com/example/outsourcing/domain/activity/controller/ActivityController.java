@@ -5,6 +5,7 @@ import com.example.outsourcing.domain.activity.model.request.ActivityRequest;
 import com.example.outsourcing.domain.activity.model.response.ActivityMyResponse;
 import com.example.outsourcing.domain.activity.model.response.ActivityTotalResponse;
 import com.example.outsourcing.domain.activity.service.ActivityService;
+import com.example.outsourcing.domain.auth.model.dto.UserinfoDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -31,10 +32,10 @@ public class ActivityController {
 
     //내 활동 로그 조회
     @GetMapping("/me")
-    public ResponseEntity<CommonResponse<PagedModel<ActivityMyResponse>>> getMyActivities(@AuthenticationPrincipal Long userId,
+    public ResponseEntity<CommonResponse<PagedModel<ActivityMyResponse>>> getMyActivities(@AuthenticationPrincipal UserinfoDetails userinfoDetails,
                                                                                           @ModelAttribute ActivityRequest request) {
 
-        CommonResponse<PagedModel<ActivityMyResponse>> response = activityService.getMyActivities(userId, request);
+        CommonResponse<PagedModel<ActivityMyResponse>> response = activityService.getMyActivities(userinfoDetails.getUserId(), request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

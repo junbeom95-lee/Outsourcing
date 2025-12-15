@@ -22,6 +22,6 @@ public class UserinfoDetailService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_USER));
 
-        return new UserinfoDetails(user);
+        return new UserinfoDetails(user.getId(), user.getUsername(), user.getRole());
     }
 }
