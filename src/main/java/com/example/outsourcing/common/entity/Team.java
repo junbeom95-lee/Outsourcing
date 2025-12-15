@@ -15,6 +15,7 @@ public class Team extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "team_id")
     private long id;
 
     @Column(nullable = false, unique = true)
