@@ -20,7 +20,6 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
-    private final ActivityLogSaveUtil activityLogSaveUtil;
 
     //로그인
     @Transactional
@@ -35,8 +34,6 @@ public class AuthService {
         String token = jwtUtil.generateToken(user.getId(), user.getUsername(), user.getRole());
 
         AuthTokenResponse response = AuthTokenResponse.from(token);
-
-        activityLogSaveUtil.saveActivityUserLogin(user);
 
         return new CommonResponse<>(true, "로그인 성공", response);
 
