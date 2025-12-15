@@ -1,6 +1,5 @@
 package com.example.outsourcing.common.filter;
 
-import com.example.outsourcing.common.entity.User;
 import com.example.outsourcing.common.enums.UserRole;
 import com.example.outsourcing.common.util.JwtUtil;
 import com.example.outsourcing.domain.auth.model.dto.UserinfoDetails;
@@ -46,9 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String username = jwtUtil.extractUsername(token);
         UserRole role = jwtUtil.extractUserRole(token);
 
-        User user = new User(userId, username, role);
-
-        UserinfoDetails userDetails = new UserinfoDetails(user);
+        UserinfoDetails userDetails = new UserinfoDetails(userId, username, role);
 
         request.setAttribute("username", username);
 
