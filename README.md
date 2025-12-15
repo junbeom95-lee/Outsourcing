@@ -48,7 +48,8 @@ REST API 기반 백엔드 서버를 외주 형태로 개발하는 것을 목표�
 ---
 # API 명세서 분석
 ## Entity 도출 및 비교 테이블 명세서
- https://www.notion.so/teamsparta/API-Entity-2c32dc3ef5148066a94be816b76ceeab
+
+ https://teamsparta.notion.site/API-Entity-2c32dc3ef5148066a94be816b76ceeab
 
 ## ERD
 <img width="2084" height="865" alt="image" src="https://github.com/user-attachments/assets/35994306-4769-4a26-b706-bd657235fb02" />
@@ -66,6 +67,7 @@ REST API 기반 백엔드 서버를 외주 형태로 개발하는 것을 목표�
 - Build.Grald
 - DB : MySQL
 - ORM : Spring Data JPA
+- Docker
 
 ---
 # 테스트
@@ -80,7 +82,8 @@ REST API 기반 백엔드 서버를 외주 형태로 개발하는 것을 목표�
 ---
 # 시연 영상
 
+https://www.notion.so/teamsparta/2bc2dc3ef514810b820ac6c20e864361
 ---
 # 프로젝트 정리본
 
----
+### https://www.canva.com/design/DAG7Rt0OTAI/pQrGrO2Jjzc1MiG7nB_sTQ/view?utm_content=DAG7Rt0OTAI&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h299075f7f0https://www.canva.com/design/DAG7Rt0OTAI/pQrGrO2Jjzc1MiG7nB_sTQ/view?utm_content=DAG7Rt0OTAI&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h299075f7f0
