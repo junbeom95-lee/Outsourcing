@@ -1,10 +1,10 @@
 package com.example.outsourcing.domain.dashboard.controller;
 
+
 import com.example.outsourcing.common.model.CommonResponse;
-import com.example.outsourcing.domain.auth.model.dto.UserinfoDetails;
-import com.example.outsourcing.domain.dashboard.dto.DashboardMyTaskDto;
-import com.example.outsourcing.domain.dashboard.dto.DashboardStatsResponse;
-import com.example.outsourcing.domain.dashboard.dto.DashboardWeelkyResponse;
+import com.example.outsourcing.domain.dashboard.model.dto.DashboardMyTaskDto;
+import com.example.outsourcing.domain.dashboard.model.response.DashboardStatsResponse;
+import com.example.outsourcing.domain.dashboard.model.response.DashboardWeelkyResponse;
 import com.example.outsourcing.domain.dashboard.service.DashboardService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,18 +20,19 @@ import java.util.List;
 @RequestMapping("/api/dashboard")
 public class DashboardController {
     private final DashboardService dashboardService;
+
     @GetMapping("/stats")
-    public ResponseEntity<CommonResponse<DashboardStatsResponse>> dashboardStats(@AuthenticationPrincipal UserinfoDetails userDetails) {
-        return ResponseEntity.ok(dashboardService.dashboardStats(userDetails.getUserId()));
+    public ResponseEntity<CommonResponse<DashboardStatsResponse>> dashboardStats(@AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(dashboardService.dashboardStats(userId));
     }
 
     @GetMapping("/tasks")
-    public ResponseEntity<CommonResponse<DashboardMyTaskDto>> myTaskSummary(@AuthenticationPrincipal UserinfoDetails userDetails) {
-        return ResponseEntity.ok(dashboardService.myTaskSummary(userDetails.getUserId()));
+    public ResponseEntity<CommonResponse<DashboardMyTaskDto>> myTaskSummary(@AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(dashboardService.myTaskSummary(userId));
     }
     @GetMapping("/weekly-trend")
-    public ResponseEntity<CommonResponse<List<DashboardWeelkyResponse>>> weeklyTrend(@AuthenticationPrincipal UserinfoDetails userDetails) {
-        return ResponseEntity.ok(dashboardService.weeklyTrend(userDetails.getUserId()));
+    public ResponseEntity<CommonResponse<List<DashboardWeelkyResponse>>> weeklyTrend(@AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(dashboardService.weeklyTrend(userId));
     }
 
 }

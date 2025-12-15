@@ -82,29 +82,8 @@ public class ActivityLogSaveUtil {
 
         String message = "댓글을 삭제했습니다.";
 
-        Activity activity = new Activity(taskId, user, ActivityType.COMMENT_CREATED, message);
+        Activity activity = new Activity(taskId, user, ActivityType.COMMENT_DELETED, message);
 
         activityRepository.save(activity);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void saveActivityUserLogin(User user) {
-
-        String message = "로그인 했습니다.";
-
-        Activity activity = new Activity(null, user, ActivityType.COMMENT_CREATED, message);
-
-        activityRepository.save(activity);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void saveActivityUserLogout(User user) {
-
-        String message = "로그아웃 했습니다.";
-
-        Activity activity = new Activity(null, user, ActivityType.COMMENT_CREATED, message);
-
-        activityRepository.save(activity);
-
     }
 }

@@ -1,4 +1,4 @@
-package com.example.outsourcing.domain.dashboard.dto;
+package com.example.outsourcing.domain.dashboard.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

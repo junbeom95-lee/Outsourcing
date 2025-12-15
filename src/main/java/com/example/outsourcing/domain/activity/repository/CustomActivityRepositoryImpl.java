@@ -23,8 +23,8 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository{
     @Override
     public Page<Activity> search(ActivityRequest request, Long userId) {
 
-        Sort sort = Sort.by("timestamp").descending();
-        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+
         LocalDateTime start = null;
         LocalDateTime end = null;
         if (request.getStartDate() != null) start = request.getStartDate().atStartOfDay();
@@ -48,11 +48,14 @@ public class CustomActivityRepositoryImpl implements CustomActivityRepository{
                 .where(
                         typeEq(request.getType()),
                         taskIdEq(request.getTaskId()),
-                        dateEq(start, end)
+                        dateEq(start, end),
+                        userIdEq(userId)
                 )
                 .fetchOne();
 
-        return new PageImpl<>(activityList, pageable, activityListCount);
+        long total = activityListCount != null ? activityListCount : 0L;
+
+        return new PageImpl<>(activityList, pageable, total);
     }
 
     //활동 유형 확인
