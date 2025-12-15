@@ -52,7 +52,8 @@ REST API 기반 백엔드 서버를 외주 형태로 개발하는 것을 목표�
  https://teamsparta.notion.site/API-Entity-2c32dc3ef5148066a94be816b76ceeab
 
 ## ERD
-<img width="2084" height="865" alt="image" src="https://github.com/user-attachments/assets/35994306-4769-4a26-b706-bd657235fb02" />
+
+<img width="2083" height="865" alt="스크린샷 2025-12-15 10 51 30" src="https://github.com/user-attachments/assets/91f6d27e-0009-4bc8-8436-581a8343dac6" />
 
 ## API 명세서
  https://teamsparta.notion.site/TaskFlow-API-2c32dc3ef51481139566e0201d71fe44
